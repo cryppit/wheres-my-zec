@@ -5,7 +5,7 @@ const SERVICES = {
   binance: "binance.svg", coinbase: "coinbase.svg", kraken: "kraken.svg", gemini: "gemini.svg", okx: "okx.svg",
   kucoin: "kucoin.svg", bitget: "bitget.svg", bybit: "bybit.svg", gate: "gate-io.svg", "trust wallet": "trust.svg",
   exodus: "exodus.svg", ledger: "ledger.svg", "ledger live": "ledger.svg", "trezor suite": "trezor.svg", trezor: "trezor.svg",
-  metamask: "metamask.svg",
+  metamask: "metamask.svg", atomic: "atomic.svg", "near intents": "near-protocol.svg",
   // App icons from each wallet's own open-source repository (see logos/LICENSE).
   zodl: "zodl.png", zashi: "zodl.png", zkool: "zkool.png", zingo: "zingo.png", ywallet: "ywallet.png", edge: "edge.png",
   "cake wallet": "cake.png", vultisig: "vultisig.png", keystone: "keystone.png",

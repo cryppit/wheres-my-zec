@@ -69,3 +69,9 @@ test("every wallet named in the restore table has a logo or a letter", () => {
     assert.ok(l.src ? existsSync(file(l.src)) : /^[A-Z0-9]$/.test(l.mono), w);
   }
 });
+
+test("the services added on 9 Nov carry a logo where an MIT one exists", () => {
+  assert.equal(logoFor("Atomic Wallet").src, "logos/atomic.svg");
+  assert.ok(existsSync(file("logos/atomic.svg")));
+  assert.equal(logoFor("NEAR Intents (1Click)").src, "logos/near-protocol.svg");
+});
