@@ -6,6 +6,7 @@ import { describe as landingWords, formatZec } from "./copy.js";
 import { classifyZcashAddress, describeZcashAddress, zcashSendAdvice } from "./zcash-address.js";
 
 const SITE = "https://cryppit.github.io/wheres-my-zec/";
+const ADDRESS_OPENER = "Hello, I have a question about a Zcash address.";
 const INTENT_SENTINEL = "https://cryppit.github.io/intent-sentinel/";
 const explorer = (txid) => ({ label: "See it on Blockchair", url: `https://blockchair.com/zcash/transaction/${txid}` });
 const CHAINS = {
@@ -20,9 +21,9 @@ function thorAmount(amount, asset) {
   return `${formatZec(Number(amount))} ${symbol} on ${CHAINS[chain] ?? chain}`;
 }
 
-function finish(c, ref, now) {
+function finish(c, ref, now, opener = "Hello, I'm trying to find my ZEC.") {
   const message = [
-    "Hello, I'm trying to find my ZEC.",
+    opener,
     ref,
     `What the records show: ${c.title}.`,
     ...c.lines.slice(0, 2),
@@ -168,7 +169,7 @@ export function caseForAddress({ address, acceptance, now }) {
   const advice = zcashSendAdvice(info);
   const ref = `Address: ${address.input}`;
   if (!info.valid || info.network !== "main") {
-    return finish({ title: advice.next.split(":")[0].replace(/\.$/, ""), evidence: "Proven", lines: [advice.next], next: { party: "you", text: "Copy the address again from where you got it." } }, ref, now);
+    return finish({ title: advice.next.split(":")[0].replace(/\.$/, ""), evidence: "Proven", lines: [advice.next], next: { party: "you", text: "Copy the address again from where you got it." } }, ref, now, ADDRESS_OPENER);
   }
   const type = addressType(address);
   const by = (v) => (acceptance ?? []).filter((r) => r.sendsTo?.[type] === v).map((r) => r.service);
@@ -188,5 +189,5 @@ export function caseForAddress({ address, acceptance, now }) {
       ...(unknown.length ? [`Not checked yet: ${unknown.join(", ")}.`] : []),
     ],
     next: { party: "you", text: "Give this address only to a service that can pay it." },
-  }, ref, now);
+  }, ref, now, ADDRESS_OPENER);
 }

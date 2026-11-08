@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- This page reads only its own dated table. test/privacy.test.js checks it. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My wallet shows zero · Where's My ZEC</title>
+<meta name="description" content="Your Zcash wallet shows zero after a restore or an upgrade? The known causes and what to do, without ever sharing your seed.">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#04061a">
+<link rel="stylesheet" href="src/style.css">
+<script type="module" src="src/restore-page.js"></script>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="./"><img src="icons/favicon.svg" alt=""><span class="name">Where's My <em>ZEC</em></span></a>
+  <nav>
+    <a href="./">Check a transaction</a>
+    <a href="./#privacy">Privacy</a>
+  </nav>
+</header>
+<main>
+  <h1>My wallet shows <em>zero</em></h1>
+  <p class="lede">Usually the ZEC is still there: the wallet you restored into reads the seed differently, or it hasn't caught up with a network upgrade. Pick your wallets to see the known causes and what to do.</p>
+  <p class="safe"><b>Your seed phrase goes only into a wallet app you trust, never into a website</b>, a form or a chat, and never to anyone offering help. Nobody legitimate will ask for it, and this page never does.</p>
+
+  <div class="pick">
+    <label>The wallet you used before
+      <select id="before"><option value="">Any wallet</option></select>
+    </label>
+    <label>The wallet showing zero now
+      <select id="now"><option value="">Any wallet</option></select>
+    </label>
+  </div>
+  <p class="status" id="status" role="status" aria-live="polite"></p>
+  <div id="fixes"></div>
+  <p class="sec">Still stuck? If you have a transaction ID for the funds, <a href="./">check it here</a> to see where the chain says they went.</p>
+</main>
+<footer>
+  Where's My ZEC by Cryppit. Each cause is dated and linked to its source; wallets change, so check the date.
+  Open source under MIT: <a href="https://github.com/cryppit/wheres-my-zec">source</a>.
+</footer>
+</body>
+</html>

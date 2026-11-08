@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- The page may talk only to itself and the public sources the code reads. test/privacy.test.js keeps this list exact. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self' https://api.blockchair.com https://gateway.liquify.com https://midgard.ninerealms.com https://mainnet.api.bridge.nearone.org; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where's My ZEC</title>
+<meta name="description" content="Paste a Zcash transaction ID or address. See where the ZEC is, who has to act next, and what to send them. Keyless and read-only.">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#04061a">
+<link rel="stylesheet" href="src/style.css">
+<script type="module" src="src/page.js"></script>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="./"><img src="icons/favicon.svg" alt=""><span class="name">Where's My <em>ZEC</em></span></a>
+  <nav>
+    <a href="restore.html">My wallet shows zero</a>
+    <a href="#how">How it knows</a>
+    <a href="#privacy">Privacy</a>
+  </nav>
+</header>
+<main>
+  <h1>Where's my <em>ZEC</em>?</h1>
+  <p class="lede">Paste a Zcash transaction ID or address. See where the ZEC is, who has to act next, and what to send them.</p>
+
+  <form class="ask" id="ask" autocomplete="off">
+    <input id="q" name="q" aria-label="Zcash transaction ID or address" placeholder="Transaction ID, address or explorer link" spellcheck="false">
+    <button class="btn go" id="go" type="submit">Check</button>
+  </form>
+  <p class="tries">Try:
+    <button type="button" data-try="2746a4c744a2ac34e7b9d72eadc174b4e1a8ee44aad3f46fe8947d86e202a360">a THORChain swap</button>
+    <button type="button" data-try="22aa3a8b56bc7dc2aa6a6a2f1da72331db6e4109b2bd7af224a094e3f451c73a">a refunded swap</button>
+    <button type="button" data-try="tex1s2rt77ggv6q989lr49rkgzmh5slsksa9khdgte">a TEX address</button>
+  </p>
+  <p class="safe"><b>Never paste a seed phrase or private key</b> here or into any website. We never ask for one, and this page refuses them.</p>
+
+  <p class="status" id="status" role="status" aria-live="polite"></p>
+  <div id="out"></div>
+
+  <section class="sec" id="how">
+    <h2>How it knows</h2>
+    <p>Every answer carries one word for how sure it is:</p>
+    <div class="grid">
+      <div class="tile"><b>Proven</b>The Zcash chain's own record shows it.</div>
+      <div class="tile"><b>Reported</b>A service's own records say so, for example THORChain or the Omni bridge.</div>
+      <div class="tile"><b>Inferred</b>The facts fit, but nothing proves it.</div>
+      <div class="tile"><b>Not visible</b>A shielded step the chain doesn't show.</div>
+      <div class="tile"><b>Unknown</b>We couldn't check, and we say so.</div>
+    </div>
+  </section>
+
+  <section class="sec" id="privacy">
+    <h2>Privacy</h2>
+    <ul>
+      <li>We never ask for a seed phrase, private key or viewing key, and this page refuses them if pasted.</li>
+      <li>An address is answered on this page from a dated table. It is not sent anywhere.</li>
+      <li>For a transaction, only the transaction ID goes to <code>api.blockchair.com</code>, a public Zcash explorer.</li>
+      <li>If that transaction carries a THORChain swap instruction, only the transaction ID also goes to THORChain's public records at <code>gateway.liquify.com</code> (or <code>midgard.ninerealms.com</code> if that is down).</li>
+      <li>Only if you press "Check bridges and swaps", the transaction's public transparent output addresses go to the Omni bridge's records at <code>mainnet.api.bridge.nearone.org</code>.</li>
+      <li>Those services see your IP address, as any website does. Nothing is stored: no accounts, no history, no cookies, no analytics.</li>
+    </ul>
+  </section>
+</main>
+<footer>
+  Where's My ZEC by Cryppit. Keyless and read-only: it never holds funds or signs anything. Open source under MIT.
+  Also: <a href="https://cryppit.github.io/zec-refund-helper/">Refund Helper</a>,
+  <a href="https://cryppit.github.io/shield-receipt/">Shield Receipt</a>,
+  <a href="https://cryppit.github.io/intent-sentinel/">Intent Sentinel</a>,
+  <a href="https://github.com/cryppit/wheres-my-zec">source</a>.
+</footer>
+</body>
+</html>

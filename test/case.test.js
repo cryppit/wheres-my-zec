@@ -147,3 +147,9 @@ test("an address with a typo is refused before anything else", () => {
   wellFormed(c);
   assert.match(c.title, /don't send/i);
 });
+
+test("an address message asks about the address, not about finding ZEC", () => {
+  const c = caseForAddress({ address: readAddress("tex1s2rt77ggv6q989lr49rkgzmh5slsksa9khdgte"), acceptance, now: NOW });
+  assert.match(c.message, /^Hello, I have a question about a Zcash address\./);
+  assert.doesNotMatch(c.message, /find my ZEC/);
+});
