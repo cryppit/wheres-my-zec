@@ -181,10 +181,25 @@
     "Zodl"
    ],
    "when": "after the Ironwood upgrade (NU6.3) on Keystone firmware older than 3.0.2",
-   "advice": "Update the Keystone to the Cypherpunk firmware 3.0.2 or later (by microSD or USB, following Zodl's guide), then sign the migration or send again from Zodl. Your seed stays on the Keystone the whole time.",
+   "advice": "Update the Keystone to the Cypherpunk firmware 3.0.2 or later (by microSD or USB, following Zodl's guide), then sign the migration or send again from Zodl. Your seed stays on the Keystone the whole time. On 9 Nov a later bug was still open: firmware 3.1.x and 3.2.0 reject Zodl's larger signing requests with \"Invalid QR Code\" (see the next cause), while 3.0.4 accepts them.",
    "nextParty": "you",
    "source": "https://support.zodl.com/article/49-upgrading-keystone-firmware",
    "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "id": "keystone-invalid-qr-large-pczt",
+   "situation": "send-failed",
+   "symptom": "My Keystone scans the whole animated QR from Zodl and then says ‘Invalid QR Code’.",
+   "wallets": [
+    "Keystone",
+    "Zodl"
+   ],
+   "when": "signing a large Zodl transaction (an Ironwood migration, or a send that spends many notes) on Keystone firmware 3.1.x or 3.2.0",
+   "advice": "Your coins haven't moved. Firmware 3.1.0 added a size check that rejects signing requests over about 14 KB, and Zodl's larger requests are bigger than that; the same request scans on 3.0.4. The bug was reported to Keystone and was still open with no fixed release on 9 Nov. Watch Keystone's release notes for the fix; a smaller send (fewer notes in one transaction) may fit under the limit, but a migration can't always be split. Your seed stays on the Keystone throughout.",
+   "nextParty": "wallet",
+   "source": "https://github.com/KeystoneHQ/keystone3-firmware/issues/2294",
+   "sourceKind": "secondary",
    "checked": "2026-11-09"
   },
   {

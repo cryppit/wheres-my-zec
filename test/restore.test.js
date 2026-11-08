@@ -60,3 +60,14 @@ test("every row in the table gets a badge, and any second source is an https lin
     if (r.confirmedBy) assert.match(r.confirmedBy.url, /^https:\/\//, r.id);
   }
 });
+
+test("Keystone advice never sends people to firmware that rejects Zodl's large signing requests (3.1.x and 3.2.0, KeystoneHQ/keystone3-firmware#2294)", () => {
+  const old = real.find((r) => r.id === "keystone-old-firmware-ironwood");
+  assert.match(old.advice, /3\.1|3\.2/, "the update advice must warn about 3.1.x / 3.2.0");
+  const qr = real.find((r) => r.id === "keystone-invalid-qr-large-pczt");
+  assert.ok(qr, "a cause for 'Invalid QR Code' on large Zodl requests");
+  assert.equal(qr.situation, "send-failed");
+  assert.deepEqual(qr.wallets, ["Keystone", "Zodl"]);
+  assert.match(qr.source, /keystone3-firmware\/issues\/2294$/);
+  assert.equal(qr.sourceKind, "secondary");
+});
