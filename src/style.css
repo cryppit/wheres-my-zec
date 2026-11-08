@@ -183,7 +183,7 @@ footer { display: grid; gap: 6px; max-width: 1080px; margin: 0 auto; padding: 24
 .wallets { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
 .wallet { all: unset; box-sizing: border-box; display: grid; justify-items: center; gap: 8px; padding: 16px 10px; border-radius: 16px; border: 1px solid var(--line); background: var(--deep); cursor: pointer; text-align: center; }
 .wallet img, .wallet .mono { width: 44px; height: 44px; border-radius: 12px; }
-.wallet img.light { padding: 4px; }
+.wallet img.light { background: #e9ecf7; padding: 4px; }
 .wallet .mono { display: grid; place-items: center; background: #1a2257; color: var(--lime); font: 800 18px system-ui, sans-serif; }
 .wallet b { font-size: 14px; }
 .wallet.other { border-style: dashed; }
