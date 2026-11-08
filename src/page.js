@@ -80,7 +80,11 @@ function renderCase(result) {
 function show(result) {
   const out = $("out");
   $("status").textContent = "";
-  if (result.refused) out.replaceChildren(el("p", { class: "notice refused", role: "alert" }, result.refused));
+  if (result.refused) {
+    // Don't leave a seed or key sitting on screen.
+    $("q").value = "";
+    out.replaceChildren(el("p", { class: "notice refused", role: "alert" }, result.refused));
+  }
   else if (result.error) out.replaceChildren(el("p", { class: "notice" }, result.error));
   else out.replaceChildren(renderCase(result));
 }
