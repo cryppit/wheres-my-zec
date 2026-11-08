@@ -4,6 +4,7 @@
  "rows": [
   {
    "id": "zodl-seed-zero-in-other-wallet",
+   "situation": "restored",
    "symptom": "I restored my Zodl (Zashi) seed in another wallet and my balance is zero or too small.",
    "wallets": [
     "Zodl",
@@ -19,6 +20,7 @@
   },
   {
    "id": "zodl-seed-in-cake",
+   "situation": "restored",
    "symptom": "I opened my Zashi or Zodl seed in Cake Wallet and some of my ZEC is missing.",
    "wallets": [
     "Zodl",
@@ -33,6 +35,7 @@
   },
   {
    "id": "zodl-zero-after-ironwood-migration",
+   "situation": "after-update",
    "symptom": "Zodl showed my balance, then after the Ironwood migration (or an app update) it shows zero and no history.",
    "wallets": [
     "Zodl",
@@ -48,6 +51,7 @@
   },
   {
    "id": "ywallet-stopped-after-ironwood",
+   "situation": "after-update",
    "symptom": "YWallet no longer works or won't send my ZEC.",
    "wallets": [
     "YWallet",
@@ -62,6 +66,7 @@
   },
   {
    "id": "metamask-snap-down",
+   "situation": "after-update",
    "symptom": "The Zcash MetaMask Snap won't open or shield, and I can't reach my ZEC.",
    "wallets": [
     "MetaMask Zcash Snap (WebZjs)"
@@ -75,6 +80,7 @@
   },
   {
    "id": "old-transparent-private-key",
+   "situation": "old-funds",
    "symptom": "I have an old transparent private key (often starting with K or L) and no wallet will import it or show the balance.",
    "wallets": [
     "Zkool",
@@ -90,6 +96,7 @@
   },
   {
    "id": "trust-wallet-seed-zec-missing",
+   "situation": "restored",
    "symptom": "I restored my old Trust Wallet seed and my ZEC isn't there.",
    "wallets": [
     "Trust Wallet",
@@ -104,6 +111,7 @@
   },
   {
    "id": "sprout-frozen-at-nu7",
+   "situation": "old-funds",
    "symptom": "My old zc... (Sprout) ZEC can't be moved any more.",
    "wallets": [
     "zcashd",
@@ -118,6 +126,7 @@
   },
   {
    "id": "tex-send-failed-ephemeral",
+   "situation": "send-failed",
    "symptom": "My Zodl send to Binance failed and the money isn't back in my balance.",
    "wallets": [
     "Zodl"
@@ -131,6 +140,7 @@
   },
   {
    "id": "zodl-swap-no-refund",
+   "situation": "send-failed",
    "symptom": "A swap or CrossPay payment from Zodl failed and I never got my ZEC back.",
    "wallets": [
     "Zodl"
@@ -144,6 +154,7 @@
   },
   {
    "id": "keystone-old-firmware-ironwood",
+   "situation": "after-update",
    "symptom": "My Keystone won't sign and I can't migrate or move my shielded ZEC.",
    "wallets": [
     "Keystone",
@@ -158,6 +169,7 @@
   },
   {
    "id": "brave-shielded-not-showing",
+   "situation": "after-update",
    "symptom": "Shielded ZEC I sent to my Brave Wallet never showed up, though the explorer says it went through.",
    "wallets": [
     "Brave Wallet"
@@ -171,6 +183,7 @@
   },
   {
    "id": "send-fails-consensus-branch-id",
+   "situation": "send-failed",
    "symptom": "My send fails with 'incorrect consensus branch id' and the coins never leave.",
    "wallets": [
     "Ledger Nano S",
@@ -187,6 +200,7 @@
   },
   {
    "id": "zkool-migration-stuck",
+   "situation": "after-update",
    "symptom": "Zkool's Ironwood migration is stuck at 'Waiting 0s' and makes no progress.",
    "wallets": [
     "Zkool"

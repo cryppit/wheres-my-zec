@@ -1,18 +1,22 @@
-// The "my wallet shows zero" table, filtered by the wallets someone picks: causes naming both wallets come first.
+// The "my wallet shows zero" flow: what happened, then which wallet, then the known causes that match.
 
-/** Every wallet named in the table, once, sorted. */
-export function walletsIn(rows) {
-  return [...new Set((rows ?? []).flatMap((r) => r.wallets ?? []))].sort((a, b) => a.localeCompare(b));
+export const SITUATIONS = [
+  { id: "restored", title: "I restored my seed in another wallet", line: "The new wallet shows less, or nothing." },
+  { id: "after-update", title: "After an app update or network upgrade", line: "The balance vanished, or the app stopped working." },
+  { id: "send-failed", title: "A send or a swap failed", line: "The coins left, or never left, and nothing arrived." },
+  { id: "old-funds", title: "Old coins or an old key", line: "A paper wallet, a key file, or coins from years ago." },
+];
+
+/** The wallets with a known cause in this situation, each once, sorted. */
+export function walletsFor(rows, situation) {
+  const names = (rows ?? []).filter((r) => r.situation === situation).flatMap((r) => r.wallets ?? []);
+  return [...new Set(names)].sort((a, b) => a.localeCompare(b));
 }
 
-/** The causes that name the wallet used before or the one showing zero now; all of them when neither is picked. */
-export function matchRestore(rows, before, now) {
-  const picks = [before, now].filter(Boolean).map((w) => w.toLowerCase());
-  if (picks.length === 0) return [...(rows ?? [])];
-  const hits = (r) => picks.filter((p) => (r.wallets ?? []).some((w) => w.toLowerCase() === p)).length;
-  return (rows ?? [])
-    .map((r, i) => ({ r, i, n: hits(r) }))
-    .filter((x) => x.n > 0)
-    .sort((a, b) => b.n - a.n || a.i - b.i)
-    .map((x) => x.r);
+/** The causes for this situation that name the wallet; every cause in the situation when no wallet is picked. */
+export function causesFor(rows, situation, wallet) {
+  const inSituation = (rows ?? []).filter((r) => r.situation === situation);
+  if (!wallet) return inSituation;
+  const w = wallet.toLowerCase();
+  return inSituation.filter((r) => (r.wallets ?? []).some((x) => x.toLowerCase() === w));
 }

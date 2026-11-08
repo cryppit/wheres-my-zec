@@ -22,9 +22,10 @@ test("the big exchanges and hardware wallets use their real logos", () => {
   }
 });
 
-test("a wallet without a logo gets its first letter", () => {
-  assert.deepEqual(logoFor("Zodl (formerly Zashi)"), { mono: "Z" });
-  assert.deepEqual(logoFor("YWallet"), { mono: "Y" });
+test("a wallet without a usable logo gets its first letter", () => {
+  // Gem's repository is GPL-3.0 and Brave's MPL: we don't copy their artwork, so they get a letter.
+  assert.deepEqual(logoFor("Gem Wallet"), { mono: "G" });
+  assert.deepEqual(logoFor("Brave Wallet"), { mono: "B" });
 });
 
 test("THORChain payout chains map to their logos, and an unknown chain gets none", () => {
@@ -49,5 +50,22 @@ test("logos drawn in black (OKX, Ledger, Trezor) get a light disc so they show o
   for (const r of acceptance) {
     const l = logoFor(r.service);
     if (l.src && /fill="#000(000)?"/i.test(readFileSync(file(l.src), "utf8"))) assert.equal(l.light, true, `${r.service} is black on dark`);
+  }
+});
+
+test("the Zcash wallets use their own app icons", () => {
+  const want = { "Zodl (formerly Zashi)": "zodl", Zodl: "zodl", Zashi: "zodl", Zkool: "zkool", Zingo: "zingo", YWallet: "ywallet", Edge: "edge", "Cake Wallet": "cake", Vultisig: "vultisig", Keystone: "keystone", "MetaMask Zcash Snap (WebZjs)": "metamask", "Ledger Nano S": "ledger" };
+  for (const [name, f] of Object.entries(want)) {
+    const l = logoFor(name);
+    assert.ok(l.src && l.src.startsWith(`logos/${f}.`), `${name} → ${l.src ?? l.mono}`);
+    assert.ok(existsSync(file(l.src)), l.src);
+  }
+});
+
+test("every wallet named in the restore table has a logo or a letter", () => {
+  const rows = JSON.parse(readFileSync(new URL("../data/restore.json", import.meta.url), "utf8")).rows;
+  for (const w of new Set(rows.flatMap((r) => r.wallets))) {
+    const l = logoFor(w);
+    assert.ok(l.src ? existsSync(file(l.src)) : /^[A-Z0-9]$/.test(l.mono), w);
   }
 });

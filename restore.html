@@ -7,7 +7,7 @@
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>My wallet shows zero · Where's My ZEC</title>
-<meta name="description" content="Your Zcash wallet shows zero after a restore or an upgrade? The known causes and what to do, without ever sharing your seed.">
+<meta name="description" content="Your Zcash wallet shows zero? Pick what happened and your wallet, and see the known causes and what to do, without ever sharing your seed.">
 <link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#04061a">
@@ -23,27 +23,39 @@
   </nav>
   <a class="gh" href="https://github.com/cryppit/wheres-my-zec">GitHub</a>
 </header>
-<main>
-  <h1>My wallet shows <em>zero.</em></h1>
-  <p class="badge"><i></i>14 known causes · each dated and sourced · never asks for your seed</p>
-  <p class="lede">Usually the ZEC is still there. Pick your wallets to see the known causes and what to do.</p>
-  <p class="safe"><b>Your seed phrase goes only into a wallet app you trust, never into a website</b>, a form or a chat, and never to anyone offering help. Nobody legitimate will ask for it, and this page never does.</p>
 
-  <div class="pick">
-    <label>The wallet you used before
-      <select id="before"><option value="">Any wallet</option></select>
-    </label>
-    <label>The wallet showing zero now
-      <select id="now"><option value="">Any wallet</option></select>
-    </label>
-  </div>
-  <p class="status" id="status" role="status" aria-live="polite"></p>
-  <div id="fixes" aria-live="polite"></div>
-  <p class="sec">Still stuck? If you have a transaction ID for the funds, <a href="./">check it here</a> to see where the chain says they went.</p>
+<main>
+  <section class="hero solo">
+    <div class="hero-text">
+      <p class="badge"><i></i>14 known causes · each dated and sourced · never asks for your seed</p>
+      <h1>My wallet shows <em>zero.</em></h1>
+      <p class="lede">Usually the ZEC is still there. Two taps to find out why, and what to do.</p>
+      <div class="strip" aria-label="Wallets it knows">
+        <span class="logos">
+          <img class="light" src="logos/zodl.png" alt="Zodl" title="Zodl"><img src="logos/zingo.png" alt="Zingo" title="Zingo"><img class="light" src="logos/zkool.png" alt="Zkool" title="Zkool"><img src="logos/ywallet.png" alt="YWallet" title="YWallet"><img class="light" src="logos/keystone.png" alt="Keystone" title="Keystone"><img src="logos/edge.png" alt="Edge" title="Edge"><img src="logos/cake.png" alt="Cake Wallet" title="Cake Wallet"><img class="light" src="logos/ledger.svg" alt="Ledger" title="Ledger"><img src="logos/trust.svg" alt="Trust Wallet" title="Trust Wallet">
+        </span>
+        <b>Zcash wallets</b>
+      </div>
+    </div>
+  </section>
+
+  <p class="safe"><b>Your seed phrase goes only into a wallet app on your own device.</b> Never into a website, a form, a chat, or to anyone offering help. This page never asks for it.</p>
+
+  <section class="card flow" aria-live="polite">
+    <ol class="steps" aria-label="Steps">
+      <li id="step-1" class="on">What happened</li>
+      <li id="step-2">Your wallet</li>
+      <li id="step-3">What to do</li>
+    </ol>
+    <div id="flow"></div>
+  </section>
+
+  <p class="sec small">Have a transaction ID for the funds? <a href="./">Check it here</a> to see where the chain says they went.</p>
 </main>
 <footer>
   <span>Where's My ZEC by Cryppit · keyless and read-only · MIT</span>
-  <span>Each cause is dated and links its source; wallets change, so check the date. The table is CC BY-SA 4.0. Logos: web3icons (MIT).</span>
+  <span>Each cause is dated and links its source; wallets change, so check the date. The table is CC BY-SA 4.0.</span>
+  <span>Logos: web3icons (MIT); wallet icons from each wallet's own open-source repository (MIT, BSD-3-Clause, Apache-2.0).</span>
 </footer>
 </body>
 </html>

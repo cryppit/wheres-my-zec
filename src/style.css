@@ -160,3 +160,35 @@ footer { display: grid; gap: 6px; max-width: 1080px; margin: 0 auto; padding: 24
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* The "my wallet shows zero" flow */
+.hero.solo { grid-template-columns: 1fr; }
+.flow { padding: 22px; }
+.steps { display: flex; gap: 8px; margin: 0 0 18px; padding: 0; list-style: none; counter-reset: step; flex-wrap: wrap; }
+.steps li { counter-increment: step; display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; border-radius: 99px; border: 1px solid var(--line); color: var(--mute); font-size: 14px; font-weight: 700; }
+.steps li::before { content: counter(step); display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #1a2257; color: var(--mute); font-size: 12px; }
+.steps li.on { border-color: var(--lime); color: var(--ink); }
+.steps li.on::before { background: var(--lime); color: var(--deep); }
+.steps li.done::before { content: "✓"; background: rgba(221, 242, 74, 0.25); color: var(--lime); }
+.flow h2 { margin: 4px 0 14px; font-size: 24px; letter-spacing: -0.02em; }
+.flow h2:focus { outline: none; }
+.crumb { margin: 0; color: var(--lime); font: 700 12px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.tile { all: unset; box-sizing: border-box; display: grid; grid-template-columns: 44px 1fr; grid-template-rows: auto auto; column-gap: 12px; align-items: center; padding: 16px; border-radius: 16px; border: 1px solid var(--line); background: var(--deep); cursor: pointer; }
+.tile svg { grid-row: span 2; width: 44px; height: 44px; padding: 10px; border-radius: 12px; background: rgba(221, 242, 74, 0.1); fill: none; stroke: var(--lime); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tile b { font-size: 16px; }
+.tile span { color: var(--mute); font-size: 14px; }
+.tile:hover, .wallet:hover { border-color: var(--lime); }
+.tile:focus-visible, .wallet:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+.wallets { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.wallet { all: unset; box-sizing: border-box; display: grid; justify-items: center; gap: 8px; padding: 16px 10px; border-radius: 16px; border: 1px solid var(--line); background: var(--deep); cursor: pointer; text-align: center; }
+.wallet img, .wallet .mono { width: 44px; height: 44px; border-radius: 12px; }
+.wallet img.light { padding: 4px; }
+.wallet .mono { display: grid; place-items: center; background: #1a2257; color: var(--lime); font: 800 18px system-ui, sans-serif; }
+.wallet b { font-size: 14px; }
+.wallet.other { border-style: dashed; }
+.back { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
+.todo { margin: 10px 0 0; padding-left: 22px; }
+.todo li { margin: 6px 0; }
+.todo li::marker { color: var(--lime); font-weight: 800; }
+@media (max-width: 640px) { .tiles { grid-template-columns: 1fr; } }
