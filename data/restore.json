@@ -31,7 +31,7 @@
     "Cake Wallet"
    ],
    "when": "restoring a Zashi or Zodl seed in Cake Wallet",
-   "advice": "Cake's own docs say this restore will not show all funds because Zashi handles change addresses differently. Restore the seed in Zodl, Zingo or Zkool (with 'Use Internal Change' on) instead. If you want to use Cake, create a new Cake wallet and send your balance to it from the wallet that shows it.",
+   "advice": "Cake can't see the one-time addresses Zodl uses for sends to TEX addresses (such as Binance deposits) and for swap refunds, so ZEC sitting there doesn't show. Restore the seed in Zodl, Zingo or Zkool instead; Zodl itself finds those one-time addresses. If you want to use Cake, create a new Cake wallet and send your balance to it from the wallet that shows it.",
    "nextParty": "you",
    "source": "https://docs.cakewallet.com/cryptos/zcash",
    "sourceKind": "official",
@@ -62,7 +62,7 @@
     "Zkool"
    ],
    "when": "after the Ironwood upgrade (NU6.3, July 2026)",
-   "advice": "YWallet dropped Zcash support at Ironwood and its developer points users to Zkool. Install Zkool, choose Restore account, enter your YWallet seed in the app, and leave 'Use Internal Change' off (YWallet never used internal change). Set an early birth height and let it sync.",
+   "advice": "YWallet dropped Zcash support at Ironwood and its developer points users to Zkool, which comes from the same developer. Install Zkool, choose Restore account, enter your YWallet seed in the app, set an early birth height and let it sync. You don't need to change 'Use Internal Change': with it on, Zkool still finds YWallet's change. Type your seed only into the wallet app on your own device.",
    "nextParty": "you",
    "source": "https://github.com/hhanh00/zwallet",
    "sourceKind": "official",
