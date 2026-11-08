@@ -61,6 +61,8 @@ python3 -m http.server 5097 --bind 127.0.0.1   # then open http://127.0.0.1:5097
   [Shield Receipt](https://github.com/cryppit/shield-receipt) (MIT, Cryppit), with its tests and the ZIP 316 test
   vectors from [zcash-test-vectors](https://github.com/zcash/zcash-test-vectors).
 - Omni bridge deposits are handed to the [Refund Helper](https://github.com/cryppit/zec-refund-helper) (MIT, Cryppit).
-- The tables in `data/` cite a source and a date on every row.
+- The tables in `data/` cite a source and a date on every row. They include facts from
+  [CanIShield](https://canishield.vercel.app) (CC BY 4.0) and [ZecHub](https://zechub.wiki) (CC BY-SA 4.0), so the
+  tables are CC BY-SA 4.0 (`data/LICENSE`).
 
-MIT licence. By Cryppit.
+Code: MIT licence. By Cryppit.

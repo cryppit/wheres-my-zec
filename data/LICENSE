@@ -1,0 +1,8 @@
+The tables in this folder (acceptance.json, restore.json) are licensed under the Creative Commons
+Attribution-ShareAlike 4.0 International licence (CC BY-SA 4.0): https://creativecommons.org/licenses/by-sa/4.0/
+
+They include facts from:
+- CanIShield, https://canishield.vercel.app (tests, community reports and readiness data: CC BY 4.0)
+- ZecHub, https://zechub.wiki (CC BY-SA 4.0)
+
+Every row links its own source and the date it was checked. The code in this repository is MIT (see ../LICENSE).

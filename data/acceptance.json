@@ -1,0 +1,475 @@
+{
+ "checked": "2026-11-09",
+ "about": "Which Zcash address types each exchange and wallet takes and sends to, read from each service's own pages where we could and from the Can I Shield and ZecHub registries otherwise; \"unknown\" means we found no source.",
+ "rows": [
+  {
+   "service": "Binance",
+   "kind": "exchange",
+   "depositAddress": "tex",
+   "acceptsShieldedDeposit": "no",
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "unknown",
+    "unified": "no",
+    "unifiedShieldedOnly": "no"
+   },
+   "holdsShielded": null,
+   "note": "Binance gives you a tex1 deposit address, and it only takes coins sent from a transparent address. From a shielded wallet, send with one that handles TEX (Zodl makes the extra hop for you; a test deposit made that way was credited on 7 Nov, after NU7). To withdraw, give Binance a t1 address: its form rejected unified addresses in October.",
+   "source": "https://canishield.vercel.app/services/binance",
+   "sourceKind": "registry",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Coinbase",
+   "kind": "exchange",
+   "depositAddress": "transparent",
+   "acceptsShieldedDeposit": "yes",
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "yes",
+    "sapling": "no",
+    "unified": "unknown",
+    "unifiedShieldedOnly": "no"
+   },
+   "holdsShielded": null,
+   "note": "You can send to Coinbase from a shielded wallet. Coinbase withdraws only to transparent addresses, so give it a t1 address and shield the coins in your wallet afterwards. (Its own page couldn't be opened from here on 9 Nov; read through search results and Can I Shield.)",
+   "source": "https://www.coinbase.com/price/zcash",
+   "sourceKind": "secondary",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Kraken",
+   "kind": "exchange",
+   "depositAddress": "transparent",
+   "acceptsShieldedDeposit": "unknown",
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "no",
+    "unified": "unknown",
+    "unifiedShieldedOnly": "no"
+   },
+   "holdsShielded": null,
+   "note": "Withdraw to a t1 address only. Kraken's own list says zs and zc addresses are not supported and does not mention unified addresses (page updated 21 Oct 2026). We found nothing from Kraken on shielded deposits.",
+   "source": "https://support.kraken.com/articles/360001474826-supported-address-formats-for-cryptocurrency-withdrawal",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Gemini",
+   "kind": "exchange",
+   "depositAddress": "unknown",
+   "acceptsShieldedDeposit": "unknown",
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "yes",
+    "unified": "yes",
+    "unifiedShieldedOnly": "yes"
+   },
+   "holdsShielded": null,
+   "note": "The one big exchange here that withdraws to shielded addresses: paste your wallet's unified (u1) address and the coins arrive shielded, including shielded-only addresses such as Keystone's. We found no Gemini page on what its deposit address is or whether shielded deposits are credited. (Its own page couldn't be opened from here on 9 Nov; read through search results and Can I Shield.)",
+   "source": "https://www.gemini.com/blog/privacy-gets-an-upgrade-gemini-adds-zcash-orchard-support",
+   "sourceKind": "secondary",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "OKX",
+   "kind": "exchange",
+   "depositAddress": "transparent",
+   "acceptsShieldedDeposit": "unknown",
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "no",
+    "unified": "unknown",
+    "unifiedShieldedOnly": "no"
+   },
+   "holdsShielded": null,
+   "note": "Use a t1 address both ways. ZecHub lists OKX as transparent only, and an OKX help article (seen only on mirror copies) says ZEC withdrawals go to transparent addresses only and a shielded address gives an 'invalid address' error.",
+   "source": "https://zechub.wiki/using-zcash/custodial-exchanges",
+   "sourceKind": "registry",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "KuCoin",
+   "kind": "exchange",
+   "depositAddress": "unknown",
+   "acceptsShieldedDeposit": "unknown",
+   "sendsTo": {
+    "transparent": "unknown",
+    "tex": "unknown",
+    "sapling": "unknown",
+    "unified": "unknown",
+    "unifiedShieldedOnly": "unknown"
+   },
+   "holdsShielded": null,
+   "note": "KuCoin delisted ZEC on 3 Sep 2025 and closed ZEC withdrawals on 3 Oct 2025. Only a secondary site says it came back, so check that KuCoin lists ZEC for your account before sending anything there.",
+   "source": "https://www.kucoin.com/en-au/announcement/en-st-kucoin-will-delist-certain-projects-and-their-associated-tokens-0902",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Bitget",
+   "kind": "exchange",
+   "depositAddress": "unknown",
+   "acceptsShieldedDeposit": "unknown",
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "unknown",
+    "unified": "no",
+    "unifiedShieldedOnly": "no"
+   },
+   "holdsShielded": null,
+   "note": "On 5 Oct Bitget's withdrawal form took a t1 address and rejected both kinds of unified address, so withdraw to a t1 address. Whether ZEC is still listed is disputed (its how-to-buy page showed 'Not listed'), so check before you deposit.",
+   "source": "https://canishield.vercel.app/services/bitget",
+   "sourceKind": "registry",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "MEXC",
+   "kind": "exchange",
+   "depositAddress": "unknown",
+   "acceptsShieldedDeposit": "unknown",
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "unknown",
+    "unified": "no",
+    "unifiedShieldedOnly": "no"
+   },
+   "holdsShielded": null,
+   "note": "On 5 Oct MEXC's withdrawal form took a t1 address and rejected both kinds of unified address ('does not conform to the rules'). Withdraw to a t1 address and shield it in your wallet.",
+   "source": "https://canishield.vercel.app/services/mexc",
+   "sourceKind": "registry",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Bybit",
+   "kind": "exchange",
+   "depositAddress": "unknown",
+   "acceptsShieldedDeposit": "unknown",
+   "sendsTo": {
+    "transparent": "unknown",
+    "tex": "unknown",
+    "sapling": "unknown",
+    "unified": "unknown",
+    "unifiedShieldedOnly": "unknown"
+   },
+   "holdsShielded": null,
+   "note": "Sources disagree on whether Bybit even has ZEC spot deposits (one guide says futures only), and we found no Bybit page on ZEC addresses. Ask Bybit support which address type it takes before sending.",
+   "source": "https://coingape.com/crypto-exchanges/zcash/",
+   "sourceKind": "secondary",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Gate",
+   "kind": "exchange",
+   "depositAddress": "unknown",
+   "acceptsShieldedDeposit": "unknown",
+   "sendsTo": {
+    "transparent": "unknown",
+    "tex": "unknown",
+    "sapling": "unknown",
+    "unified": "unknown",
+    "unifiedShieldedOnly": "unknown"
+   },
+   "holdsShielded": null,
+   "note": "Gate trades ZEC but we found no Gate page on which ZEC addresses it takes, and nobody has tested it. Use a t1 address to be safe and send a small amount first.",
+   "source": "https://canishield.vercel.app/services/gate",
+   "sourceKind": "registry",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "HTX",
+   "kind": "exchange",
+   "depositAddress": "transparent",
+   "acceptsShieldedDeposit": "unknown",
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "no",
+    "unified": "unknown",
+    "unifiedShieldedOnly": "no"
+   },
+   "holdsShielded": null,
+   "note": "ZecHub lists HTX (Huobi) as transparent only; nobody has tested it. Use a t1 address both ways.",
+   "source": "https://zechub.wiki/using-zcash/custodial-exchanges",
+   "sourceKind": "registry",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Zodl (formerly Zashi)",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "yes",
+    "sapling": "unknown",
+    "unified": "yes",
+    "unifiedShieldedOnly": "unknown"
+   },
+   "holdsShielded": "yes",
+   "note": "Shielded wallet that pays Binance's tex1 addresses by itself (it hops through a one-time transparent address). Since NU7 it needs version 3.19.0 or later. To open a Zodl seed in another wallet, use Zkool with 'Use Internal Change' on, or Zingo.",
+   "source": "https://zodl.com/released-currency-conversion-transparent-history-and-tex-addresses-in-zashi",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Zkool",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "yes",
+    "sapling": "unknown",
+    "unified": "yes",
+    "unifiedShieldedOnly": "unknown"
+   },
+   "holdsShielded": "yes",
+   "note": "YWallet's successor, and the wallet forum helpers most often suggest for restoring other wallets' seeds and old transparent keys. Use 6.35 or later, which is built for NU7.",
+   "source": "https://github.com/hhanh00/zkool2/releases",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Zingo",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "yes",
+    "sapling": "unknown",
+    "unified": "yes",
+    "unifiedShieldedOnly": "unknown"
+   },
+   "holdsShielded": "yes",
+   "note": "Shielded wallet with TEX sends, and it reads Zodl seeds directly. Its library moved to NU7 in zingolib 8.0.0, so update the app.",
+   "source": "https://apps.apple.com/app/zingo/id1668209531",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "YWallet",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "no",
+    "tex": "no",
+    "sapling": "no",
+    "unified": "no",
+    "unifiedShieldedOnly": "no"
+   },
+   "holdsShielded": "no",
+   "note": "YWallet stopped supporting Zcash at the Ironwood upgrade and no longer sends. Restore your YWallet seed in Zkool instead, with 'Use Internal Change' turned off.",
+   "source": "https://github.com/hhanh00/zwallet",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Edge",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "unknown",
+    "tex": "unknown",
+    "sapling": "unknown",
+    "unified": "yes",
+    "unifiedShieldedOnly": "unknown"
+   },
+   "holdsShielded": "yes",
+   "note": "Shielded (Ironwood) wallet that shields incoming transparent coins automatically. Update to v4.52.3 or later for NU7.",
+   "source": "https://zechub.wiki/using-zcash/wallets",
+   "sourceKind": "registry",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Unstoppable",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "unknown",
+    "unified": "yes",
+    "unifiedShieldedOnly": "unknown"
+   },
+   "holdsShielded": "yes",
+   "note": "Shielded (Ironwood) multi-coin wallet. Version 0.53.1 or later is on the NU7 libraries.",
+   "source": "https://zechub.wiki/using-zcash/wallets",
+   "sourceKind": "registry",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Cake Wallet",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "unknown",
+    "tex": "unknown",
+    "sapling": "unknown",
+    "unified": "yes",
+    "unifiedShieldedOnly": "unknown"
+   },
+   "holdsShielded": "yes",
+   "note": "Shielded (Ironwood by default) and shields coins that land on its transparent addresses. Cake's docs say a Zashi or Zodl seed restored in Cake will not show all funds: open those seeds in Zodl, Zingo or Zkool instead.",
+   "source": "https://docs.cakewallet.com/cryptos/zcash",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Keystone",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "unknown",
+    "tex": "unknown",
+    "sapling": "unknown",
+    "unified": "unknown",
+    "unifiedShieldedOnly": "unknown"
+   },
+   "holdsShielded": "yes",
+   "note": "Hardware signer used with Zodl or Vizor. Shielded ZEC needs the Cypherpunk firmware, 3.0.2 or later since Ironwood. What it can send to follows the app you pair it with.",
+   "source": "https://support.zodl.com/article/49-upgrading-keystone-firmware",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Ledger Live",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "unknown",
+    "unified": "unknown",
+    "unifiedShieldedOnly": "unknown"
+   },
+   "holdsShielded": "yes",
+   "note": "Ledger's desktop app (now called Ledger Wallet) holds shielded Ironwood ZEC since 23 Sep 2026; mobile does not yet. Update to 4.25.0 or later for NU7.",
+   "source": "https://www.ledger.com/blog-native-shielded-zcash-support",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Trezor Suite",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "no",
+    "unified": "unknown",
+    "unifiedShieldedOnly": "no"
+   },
+   "holdsShielded": "no",
+   "note": "Transparent only: Trezor says shielded transactions are not compatible. Give exchanges your t1 address; to go private, send from Trezor to a shielded wallet.",
+   "source": "https://trezor.io/coins/wallet/zcash",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Trust Wallet",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "unknown",
+    "unified": "no",
+    "unifiedShieldedOnly": "no"
+   },
+   "holdsShielded": "no",
+   "note": "Transparent only: it sends to t1 addresses (seen on chain in October) and rejects unified addresses. Its signing library got NU7 support on 6 Nov, so if a send fails, update the app.",
+   "source": "https://canishield.vercel.app/services/trust-wallet",
+   "sourceKind": "registry",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Exodus",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "no",
+    "unified": "unknown",
+    "unifiedShieldedOnly": "no"
+   },
+   "holdsShielded": "no",
+   "note": "Transparent only: Exodus says it does not support shielded ZEC addresses. Use its t1 address with exchanges, and a shielded wallet for privacy.",
+   "source": "https://canishield.vercel.app/services/exodus",
+   "sourceKind": "registry",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Gem Wallet",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "no",
+    "unified": "unknown",
+    "unifiedShieldedOnly": "no"
+   },
+   "holdsShielded": "no",
+   "note": "Transparent only: Gem receives ZEC only at the t1 address it shows and cannot send to Sapling or Orchard addresses.",
+   "source": "https://docs.gemwallet.com/blockchains/zcash/",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Brave Wallet",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "unknown",
+    "tex": "unknown",
+    "sapling": "unknown",
+    "unified": "unknown",
+    "unifiedShieldedOnly": "unknown"
+   },
+   "holdsShielded": "yes",
+   "note": "Shielded on desktop only. Ironwood transaction types were added for Brave 1.95.x, but ZecHub still lists Brave's Ironwood support as in progress, so update Brave and try a small amount first.",
+   "source": "https://github.com/brave/brave-browser/issues/57861",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Vultisig",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "unknown",
+    "unified": "unknown",
+    "unifiedShieldedOnly": "unknown"
+   },
+   "holdsShielded": "no",
+   "note": "Transparent only. Plain sends moved to NU7's transaction format; ZEC swaps through SwapKit still stop with an error before signing, so no funds move.",
+   "source": "https://zechub.wiki/using-zcash/wallets",
+   "sourceKind": "registry",
+   "checked": "2026-11-09"
+  }
+ ],
+ "license": "Data in this file is CC BY-SA 4.0. It includes facts from CanIShield (https://canishield.vercel.app, CC BY 4.0) and ZecHub (https://zechub.wiki, CC BY-SA 4.0)."
+}

@@ -1,0 +1,203 @@
+{
+ "checked": "2026-11-09",
+ "about": "Known reasons a Zcash wallet shows zero or loses access after a restore or a network upgrade, with what to try; none of these steps ever needs your seed or keys on a website.",
+ "rows": [
+  {
+   "id": "zodl-seed-zero-in-other-wallet",
+   "symptom": "I restored my Zodl (Zashi) seed in another wallet and my balance is zero or too small.",
+   "wallets": [
+    "Zodl",
+    "Zkool",
+    "Zingo"
+   ],
+   "when": "restoring a Zodl or Zashi seed in another wallet, often after the Ironwood upgrade (NU6.3)",
+   "advice": "Wallets keep change at different addresses, so a restore can miss coins. In the Zkool app choose Restore account, open Advanced Options and make sure 'Use Internal Change' is on, and set a birth height at or before your wallet's start (2419000 covers any Zashi wallet). Let it sync fully. Zingo also reads Zodl seeds directly. Type your seed only into the wallet app on your own device, never into a website or for someone who messages you.",
+   "nextParty": "you",
+   "source": "https://forum.zcashcommunity.com/t/57792",
+   "sourceKind": "forum",
+   "checked": "2026-11-09"
+  },
+  {
+   "id": "zodl-seed-in-cake",
+   "symptom": "I opened my Zashi or Zodl seed in Cake Wallet and some of my ZEC is missing.",
+   "wallets": [
+    "Zodl",
+    "Cake Wallet"
+   ],
+   "when": "restoring a Zashi or Zodl seed in Cake Wallet",
+   "advice": "Cake's own docs say this restore will not show all funds because Zashi handles change addresses differently. Restore the seed in Zodl, Zingo or Zkool (with 'Use Internal Change' on) instead. If you want to use Cake, create a new Cake wallet and send your balance to it from the wallet that shows it.",
+   "nextParty": "you",
+   "source": "https://docs.cakewallet.com/cryptos/zcash",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "id": "zodl-zero-after-ironwood-migration",
+   "symptom": "Zodl showed my balance, then after the Ironwood migration (or an app update) it shows zero and no history.",
+   "wallets": [
+    "Zodl",
+    "Zkool",
+    "Zingo"
+   ],
+   "when": "after the in-app Orchard to Ironwood migration or an app update",
+   "advice": "First check your recovery phrase is written down and matches what Zodl shows. Then resync: on iOS delete and reinstall Zodl, on Android use Zodl's resync steps. If it is still zero, restore the same phrase in Zkool ('Use Internal Change' on, early birth height) or Zingo. If both still show zero, email support@zodl.com; forum cases like this were still open in October.",
+   "nextParty": "wallet",
+   "source": "https://support.zodl.com/article/39-resyncing-zodl-on-ios",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "id": "ywallet-stopped-after-ironwood",
+   "symptom": "YWallet no longer works or won't send my ZEC.",
+   "wallets": [
+    "YWallet",
+    "Zkool"
+   ],
+   "when": "after the Ironwood upgrade (NU6.3, July 2026)",
+   "advice": "YWallet dropped Zcash support at Ironwood and its developer points users to Zkool. Install Zkool, choose Restore account, enter your YWallet seed in the app, and leave 'Use Internal Change' off (YWallet never used internal change). Set an early birth height and let it sync.",
+   "nextParty": "you",
+   "source": "https://github.com/hhanh00/zwallet",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "id": "metamask-snap-down",
+   "symptom": "The Zcash MetaMask Snap won't open or shield, and I can't reach my ZEC.",
+   "wallets": [
+    "MetaMask Zcash Snap (WebZjs)"
+   ],
+   "when": "since the Ironwood upgrade; the Snap's NU7 update was still unreleased on 9 Nov 2026",
+   "advice": "Your coins stay on the chain, but only the Snap can spend them for now, and no published guide shows another wallet restoring Snap funds. Wait for the official Snap update from its maintainers (red-dev) in MetaMask's Snaps directory. Never type your MetaMask secret recovery phrase into a website or 'recovery tool', and ignore anyone who messages you offering to help.",
+   "nextParty": "wallet",
+   "source": "https://forum.zcashcommunity.com/t/57274",
+   "sourceKind": "forum",
+   "checked": "2026-11-09"
+  },
+  {
+   "id": "old-transparent-private-key",
+   "symptom": "I have an old transparent private key (often starting with K or L) and no wallet will import it or show the balance.",
+   "wallets": [
+    "Zkool",
+    "YWallet",
+    "Zallet"
+   ],
+   "when": "importing a paper or exported transparent key from an old wallet",
+   "advice": "Zkool's Restore account takes transparent private keys. Turn 'Use Internal Change' off before you import (with it on, the current release fails with 'account N has no transparent key'; the fix is not released yet), and set a birth height before your first deposit. Keys with thousands of tiny mining payouts may not sync; the forum suggests Zallet for those. Do this only in the app on your computer, never on a website.",
+   "nextParty": "you",
+   "source": "https://forum.zcashcommunity.com/t/53450",
+   "sourceKind": "forum",
+   "checked": "2026-11-09"
+  },
+  {
+   "id": "trust-wallet-seed-zec-missing",
+   "symptom": "I restored my old Trust Wallet seed and my ZEC isn't there.",
+   "wallets": [
+    "Trust Wallet",
+    "Zkool"
+   ],
+   "when": "restoring an old (for example 2020) Trust Wallet seed",
+   "advice": "Trust Wallet shows only some coins after a restore, so first add ZEC to the coin list in Trust Wallet and wait for it to load. If it still shows nothing, the forum's advice is to restore the seed in Zkool, which reads only the Zcash part. That seed also controls your other coins, so move those with Trust Wallet first if you can, and type it only into the app on your own device.",
+   "nextParty": "you",
+   "source": "https://forum.zcashcommunity.com/t/57364",
+   "sourceKind": "forum",
+   "checked": "2026-11-09"
+  },
+  {
+   "id": "sprout-frozen-at-nu7",
+   "symptom": "My old zc... (Sprout) ZEC can't be moved any more.",
+   "wallets": [
+    "zcashd",
+    "Argos"
+   ],
+   "when": "since NU7 (block 3,543,405, 6 Nov 2026), which froze about 12,224 ZEC still in Sprout",
+   "advice": "Sprout coins are not destroyed, but no software can spend them now and no recovery plan has been approved. Keep your old wallet.dat or keys backed up offline and follow the Zcash forum for any future recovery proposal. Transparent t1 coins from the same era are not frozen and can still be moved. Anyone offering to 'unfreeze' Sprout for you is a scam.",
+   "nextParty": "nobody",
+   "source": "https://forum.zcashcommunity.com/t/57718",
+   "sourceKind": "forum",
+   "checked": "2026-11-09"
+  },
+  {
+   "id": "tex-send-failed-ephemeral",
+   "symptom": "My Zodl send to Binance failed and the money isn't back in my balance.",
+   "wallets": [
+    "Zodl"
+   ],
+   "when": "sending from Zodl to a tex1 (Binance) address",
+   "advice": "Zodl first moves the coins to a one-time transparent address it owns, then on to Binance; if the second step fails, the coins wait there. In Zodl's Activity, open the transaction just before your send (0.00015 ZEC) and copy its t1 address (not Binance's tex1). Turn on Tor protection, then in Settings long-press the ZODL logo to open Discover Funds, paste the t1 address and tap Scan address.",
+   "nextParty": "you",
+   "source": "https://support.zodl.com/article/29-recovering-funds-from-an-ephemeral-address",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "id": "zodl-swap-no-refund",
+   "symptom": "A swap or CrossPay payment from Zodl failed and I never got my ZEC back.",
+   "wallets": [
+    "Zodl"
+   ],
+   "when": "swapping or paying through NEAR Intents inside Zodl",
+   "advice": "Refunds are usually automatic to the refund address set when the swap was made. If 24 hours have passed with nothing back, look up your swap's deposit address or transaction ID on explorer.near-intents.org and file a request with NEAR support through the link in Zodl's help article; manual refunds can take a couple of days. You never need to give anyone your seed for a refund.",
+   "nextParty": "wallet",
+   "source": "https://support.zodl.com/article/10-refunding-a-swap",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "id": "keystone-old-firmware-ironwood",
+   "symptom": "My Keystone won't sign and I can't migrate or move my shielded ZEC.",
+   "wallets": [
+    "Keystone",
+    "Zodl"
+   ],
+   "when": "after the Ironwood upgrade (NU6.3) on Keystone firmware older than 3.0.2",
+   "advice": "Update the Keystone to the Cypherpunk firmware 3.0.2 or later (by microSD or USB, following Zodl's guide), then sign the migration or send again from Zodl. Your seed stays on the Keystone the whole time.",
+   "nextParty": "you",
+   "source": "https://support.zodl.com/article/49-upgrading-keystone-firmware",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "id": "brave-shielded-not-showing",
+   "symptom": "Shielded ZEC I sent to my Brave Wallet never showed up, though the explorer says it went through.",
+   "wallets": [
+    "Brave Wallet"
+   ],
+   "when": "receiving shielded ZEC after the Ironwood upgrade (NU6.3)",
+   "advice": "New shielded payments now land in the Ironwood pool, and Brave staff said Ironwood support comes with Brave 1.95.x. Update Brave on desktop, let the Zcash account sync fully, and if the funds still don't show, open a ticket with Brave support.",
+   "nextParty": "wallet",
+   "source": "https://community.brave.app/t/newly-sent-shielded-zcash-not-showing/656660",
+   "sourceKind": "forum",
+   "checked": "2026-11-09"
+  },
+  {
+   "id": "send-fails-consensus-branch-id",
+   "symptom": "My send fails with 'incorrect consensus branch id' and the coins never leave.",
+   "wallets": [
+    "Ledger Nano S",
+    "Trust Wallet",
+    "Vultisig",
+    "KeepKey"
+   ],
+   "when": "after a network upgrade (NU6.3 in July, NU7 on 6 Nov 2026) in a wallet or signer that hasn't updated",
+   "advice": "Nothing is lost: the network refused a transaction signed with old rules, so the coins never moved. Update the wallet app and hardware firmware. If your device or app gets no update (Ledger stopped supporting the Zcash app on the original Nano S), move the coins with a maintained wallet instead.",
+   "nextParty": "wallet",
+   "source": "https://forum.zcashcommunity.com/t/51139/121",
+   "sourceKind": "forum",
+   "checked": "2026-11-09"
+  },
+  {
+   "id": "zkool-migration-stuck",
+   "symptom": "Zkool's Ironwood migration is stuck at 'Waiting 0s' and makes no progress.",
+   "wallets": [
+    "Zkool"
+   ],
+   "when": "running Zkool's Orchard to Ironwood migration",
+   "advice": "This was a known Zkool bug when a small leftover Orchard amount fell in a 'dead zone'. Update Zkool (the fix first shipped in 6.29.0-rc.4, and current releases include it) and run the migration again.",
+   "nextParty": "you",
+   "source": "https://forum.zcashcommunity.com/t/51139/143",
+   "sourceKind": "forum",
+   "checked": "2026-11-09"
+  }
+ ],
+ "license": "Data in this file is CC BY-SA 4.0. Each row links its source."
+}
