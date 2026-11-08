@@ -71,3 +71,20 @@ test("Keystone advice never sends people to firmware that rejects Zodl's large s
   assert.match(qr.source, /keystone3-firmware\/issues\/2294$/);
   assert.equal(qr.sourceKind, "secondary");
 });
+
+test("the causes found on the forum on 9 Nov are in the table, and their advice keeps seeds safe", () => {
+  const ids = ["ledger-zondax-sapling-after-nu7", "ledger-mobile-old-coins-unsupported-version", "pre-sapling-birthday-refused", "exchange-held-shielded-deposit", "zecwallet-lite-abandoned", "legacy-sapling-key-zallet-import", "pay-recipient-sent-funds-back", "zodl-sync-stuck-partway", "cake-disposable-taddress-restore"];
+  for (const id of ids) assert.ok(real.some((r) => r.id === id), `${id} is missing`);
+  const byId = Object.fromEntries(real.map((r) => [r.id, r]));
+  // zecwallet-cli's flag is --nosync and it still dials its dead server first: we don't tell people to use it.
+  assert.doesNotMatch(byId["zecwallet-lite-abandoned"].advice, /--no-?sync/);
+  // Typing a Ledger's 24 words into a hot wallet exposes every coin on that Ledger: say to move the rest first.
+  assert.match(byId["ledger-zondax-sapling-after-nu7"].advice, /different recovery phrase/);
+  // No promise on Cake's behalf that the issue never made.
+  assert.doesNotMatch(byId["cake-disposable-taddress-restore"].advice, /team has said/);
+});
+
+test("Argos is a rescue tool we point to, not a wallet someone picks as theirs", () => {
+  assert.ok(!walletsFor(real, "old-funds").includes("Argos"));
+  assert.ok(real.every((r) => !r.wallets.includes("Argos")));
+});

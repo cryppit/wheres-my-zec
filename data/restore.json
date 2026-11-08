@@ -130,8 +130,7 @@
    "situation": "old-funds",
    "symptom": "My old zc... (Sprout) ZEC can't be moved any more.",
    "wallets": [
-    "zcashd",
-    "Argos"
+    "zcashd"
    ],
    "when": "since NU7 (block 3,543,405, 6 Nov 2026), which froze about 12,224 ZEC still in Sprout",
    "advice": "Sprout coins are not destroyed, but no software can spend them now and no recovery plan has been approved. Keep your old wallet.dat or keys backed up offline and follow the Zcash forum for any future recovery proposal. Transparent t1 coins from the same era are not frozen and can still be moved. Anyone offering to 'unfreeze' Sprout for you is a scam.",
@@ -256,6 +255,168 @@
    "checked": "2026-11-09",
    "confirmedBy": {
     "url": "https://github.com/hhanh00/zkool2/releases/tag/zkool-v6.29.0",
+    "kind": "official"
+   }
+  },
+  {
+   "id": "ledger-zondax-sapling-after-nu7",
+   "situation": "after-update",
+   "symptom": "My shielded (Sapling) ZEC on my Ledger, from the old 'Zcash Shielded' app, can't be moved since NU7, and Ledger Wallet doesn't show it.",
+   "wallets": [
+    "Ledger",
+    "Zkool",
+    "YWallet"
+   ],
+   "when": "since NU7 (6 Nov 2026), for Sapling funds held through the Zondax 'Zcash Shielded' Ledger app (used with YWallet or Zkool)",
+   "advice": "Your coins are still on the chain. The old Zondax app can't sign the transactions the network accepts since NU7, and Ledger's new Zcash app and Ledger Wallet don't show Sapling funds at all, so no Ledger device can move them now. The route left is your Ledger's 24 words: Zondax derived these Sapling keys its own way, so most wallets won't find them, but Zkool can. Those words also protect everything else on that Ledger, so first move your other coins to a wallet with a different recovery phrase. Then, in Zkool on your own computer, choose Restore account, turn on Advanced Options and the H/W Ledger switch, pick 'Zondax (Sapling)', enter the words, set a birth height from before your first Sapling payment, and let it sync. Install Zkool only from its GitHub releases or the official app stores. Nobody needs your words to help you.",
+   "nextParty": "you",
+   "source": "https://forum.zcashcommunity.com/t/58736",
+   "sourceKind": "forum",
+   "checked": "2026-11-09",
+   "confirmedBy": {
+    "url": "https://hhanh00.github.io/zkool2/recipe/ledger.html",
+    "kind": "official"
+   }
+  },
+  {
+   "id": "ledger-mobile-old-coins-unsupported-version",
+   "situation": "send-failed",
+   "symptom": "Ledger Wallet (Ledger Live) on my phone says 'Unsupported transaction version' when I try to send old transparent ZEC.",
+   "wallets": [
+    "Ledger",
+    "Ledger Live"
+   ],
+   "when": "sending transparent ZEC from Ledger's mobile app when the coins arrived in a very old transaction (from before October 2018) or in one that also carried Sapling shielded data",
+   "advice": "Nothing is lost: the send was refused before anything left. Ledger's mobile app still uses an older signing path that reads the transaction your coins came from, and very old formats fail there. Send from Ledger Wallet on a desktop computer instead, version 4.21 or later, with the Zcash (ZEC) app 3.9.4 or later installed from My Ledger: Ledger says the desktop path doesn't read that old transaction. This works on a Nano S Plus, Nano X, Flex, Stax or Nano Gen5; the original Nano S isn't supported. Your 24 words stay on the device the whole time.",
+   "nextParty": "you",
+   "source": "https://forum.zcashcommunity.com/t/50951/177",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "id": "pre-sapling-birthday-refused",
+   "situation": "old-funds",
+   "symptom": "I restored my old seed (for example from a Ledger) but coins I received before late 2018 never show up.",
+   "wallets": [
+    "Zodl",
+    "Zingo",
+    "Ledger",
+    "Zkool"
+   ],
+   "when": "restoring a seed whose first ZEC arrived before Sapling activated (block 419,200, October 2018)",
+   "advice": "Zodl and Zingo won't scan from before block 419,200 and raise an earlier birth height to that block, so older payments are never found. If the coins are on a Ledger, first try sending them from Ledger Wallet on a desktop computer (4.21 or later, with the Zcash app 3.9.4 or later): Ledger says that path no longer reads the old transaction, and your 24 words stay on the device. Otherwise restore the seed in Zkool with birth height 1; since these are transparent coins you can turn off the shielded pools to make the sync quicker. If Zkool shows the balance but says 'No feasible note selection found', the note is probably locked in coin control: unlock it and send again. A Ledger's 24 words also protect your other coins, so before typing them into Zkool on your own device, move those coins to a wallet with a different recovery phrase.",
+   "nextParty": "you",
+   "source": "https://forum.zcashcommunity.com/t/46044/578",
+   "sourceKind": "forum",
+   "checked": "2026-11-09",
+   "confirmedBy": {
+    "url": "https://hhanh00.github.io/zkool2/recipe/restore.html",
+    "kind": "official"
+   }
+  },
+  {
+   "id": "exchange-held-shielded-deposit",
+   "situation": "send-failed",
+   "symptom": "I sent ZEC from my shielded wallet to Binance and it was never credited.",
+   "wallets": [
+    "Binance",
+    "Zodl",
+    "Zingo",
+    "Zkool"
+   ],
+   "when": "sending from a shielded balance straight to a Binance deposit address, which only takes coins sent from a transparent address",
+   "advice": "If the transaction confirmed on the chain, the coins reached Binance: it holds deposits that come from the shielded pool instead of crediting them. Open a ticket with Binance support, give them only the transaction ID and the amount, and ask for the deposit back to a transparent (t1) address you control. Binance has returned such deposits after an internal audit, but it gave no date in September 2026, and earlier cases on the forum took from one to several weeks. Next time, send to Binance's tex1 deposit address from a wallet that handles TEX, such as Zodl, which makes the transparent hop for you.",
+   "nextParty": "wallet",
+   "source": "https://forum.zcashcommunity.com/t/47667/78",
+   "sourceKind": "forum",
+   "checked": "2026-11-09"
+  },
+  {
+   "id": "zecwallet-lite-abandoned",
+   "situation": "old-funds",
+   "symptom": "My old ZecWallet Lite won't open or sync, and the command-line version crashes with 'Couldn't get network'.",
+   "wallets": [
+    "ZecWallet Lite"
+   ],
+   "when": "opening a ZecWallet Lite or zecwallet-cli wallet (unmaintained since about 2023)",
+   "advice": "Your coins are still on the chain. ZecWallet Lite hasn't been maintained since about 2023 and its default server no longer runs, so the app can't connect or sync. Argos, a desktop recovery app from Sovright, reads ZecWallet Lite seed phrases and ZecWallet Lite wallet files (including encrypted ones), checks the extra addresses ZecWallet made, and sweeps the funds to an address you choose. Download it only from Sovright's GitHub releases and run it on your own computer. Never send the wallet file or seed to anyone offering to help, even for a fee.",
+   "nextParty": "you",
+   "source": "https://forum.zcashcommunity.com/t/46044/592",
+   "sourceKind": "forum",
+   "checked": "2026-11-09",
+   "confirmedBy": {
+    "url": "https://github.com/sovright/argos",
+    "kind": "official"
+   }
+  },
+  {
+   "id": "legacy-sapling-key-zallet-import",
+   "situation": "old-funds",
+   "symptom": "Zallet won't import my old zcashd Sapling key: z_importkey drops the connection, or the key imports and shows nothing.",
+   "wallets": [
+    "Zallet",
+    "zcashd",
+    "Zkool"
+   ],
+   "when": "moving a legacy zcashd Sapling spending key (secret-extended-key-main…) into Zallet beta",
+   "advice": "Zallet is still in beta, and on 4 Nov 2026 its developers confirmed that funds received to an imported Sapling key can't yet be spent, even in beta.4. Zkool imports a zcashd Sapling spending key directly: choose Restore account, paste the key into the app on your own computer, set a birth height from before your first payment and let it sync. Argos, a desktop recovery app, also scans and sweeps these keys and zcashd wallet.dat files. Keep the original wallet.dat backed up offline, and never send the key or the file to anyone who offers help.",
+   "nextParty": "you",
+   "source": "https://forum.zcashcommunity.com/t/46044/564",
+   "sourceKind": "forum",
+   "checked": "2026-11-09",
+   "confirmedBy": {
+    "url": "https://github.com/zcash/zallet/issues/582",
+    "kind": "official"
+   }
+  },
+  {
+   "id": "pay-recipient-sent-funds-back",
+   "situation": "send-failed",
+   "symptom": "I paid someone in BTC (or another coin) from Zodl, they sent the payment back, and it never reached me.",
+   "wallets": [
+    "Zodl"
+   ],
+   "when": "using Zodl's Pay (NEAR Intents) to pay an exchange or service that later returns the payment",
+   "advice": "The swap itself finished, so it isn't refunded automatically. The returned coins went back to the address that sent them, which belongs to the swap service, not to you. Contact NEAR's support through the form linked in Zodl's 'How do I obtain a refund for my swap?' article, and give them the swap's deposit address (t1…), the swap ID and the return transaction on the other chain. Zodl's team has offered to pass the deposit address on as well. Whether NEAR can send it back is up to them. To avoid this, pay exchanges from a wallet you control on that chain, not straight from a swap.",
+   "nextParty": "wallet",
+   "source": "https://forum.zcashcommunity.com/t/58105",
+   "sourceKind": "forum",
+   "checked": "2026-11-09"
+  },
+  {
+   "id": "zodl-sync-stuck-partway",
+   "situation": "after-update",
+   "symptom": "Zodl has been stuck at the same sync percentage for days or weeks.",
+   "wallets": [
+    "Zodl",
+    "Zkool",
+    "Zingo"
+   ],
+   "when": "syncing Zodl (reported on the latest version in September 2026)",
+   "advice": "First make sure your recovery phrase is written down and matches what Zodl shows. Then try another server: in '...' > More > Advanced Settings > Choose a Server, pick one of the fastest. If it still stops, resync: on iOS delete and reinstall Zodl; on Android use '...' > More > Advanced Settings > Reset Zodl and restore with your phrase. If it still won't finish, restore the same phrase in Zkool ('Use Internal Change' on, birth height 2419000 or earlier) or in Zingo, on your own device. Email support@zodl.com with your app version; never post your phrase anywhere.",
+   "nextParty": "you",
+   "source": "https://forum.zcashcommunity.com/t/46044/594",
+   "sourceKind": "forum",
+   "checked": "2026-11-09"
+  },
+  {
+   "id": "cake-disposable-taddress-restore",
+   "situation": "restored",
+   "symptom": "I restored my Cake Wallet seed in another wallet and ZEC I received at Cake's 'Transparent (Disposable)' addresses is missing.",
+   "wallets": [
+    "Cake Wallet",
+    "Zodl",
+    "Zkool",
+    "Zingo"
+   ],
+   "when": "restoring a Cake Wallet ZEC seed in a different wallet",
+   "advice": "Cake makes its disposable transparent addresses from your seed plus a hidden extra passphrase that only Cake adds, so no other wallet finds coins sent there. Restore the seed in Cake Wallet itself, with a restore height from before those payments, and keep the app open until it has synced: Cake then shields what sits at those addresses into your wallet, unless the total is 0.0003 ZEC or less. Then send the balance to an address in your new wallet.",
+   "nextParty": "you",
+   "source": "https://github.com/cake-tech/cake_wallet/issues/3614",
+   "sourceKind": "secondary",
+   "checked": "2026-11-09",
+   "confirmedBy": {
+    "url": "https://github.com/cake-tech/cake_wallet/blob/dev/cw_zcash/lib/src/zcash_taddress_rotation.dart",
     "kind": "official"
    }
   }
