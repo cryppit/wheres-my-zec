@@ -81,7 +81,7 @@ function thorchainCase(o) {
         evidence: "Unknown",
         lines: [
           "This transaction carries a THORChain swap instruction, but THORChain's records don't show it.",
-          "Maya uses the same instructions, and Maya has been halted since 18 Aug 2026, so a swap sent there may be waiting.",
+          "Maya uses the same kind of instructions, so a swap sent to Maya won't show here: check it on Maya's explorer. THORChain can also take a few minutes to record a new deposit.",
         ],
         next: { party: "thorchain", text: "If it's been more than an hour, ask in THORChain's community support (or Maya's, if you used Maya) with this transaction ID." },
       };
