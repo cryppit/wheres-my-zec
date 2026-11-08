@@ -1,0 +1,52 @@
+{
+ "txid": "6a93c555a0ed880d2dd4b82107131c5ecbdad5fd36622e2bb1fb13411c0d7f27",
+ "recorded": "2026-10-30T10:09:27.420Z",
+ "raw": {
+  "data": {
+   "6a93c555a0ed880d2dd4b82107131c5ecbdad5fd36622e2bb1fb13411c0d7f27": {
+    "decoded_raw_transaction": {
+     "txid": "6a93c555a0ed880d2dd4b82107131c5ecbdad5fd36622e2bb1fb13411c0d7f27",
+     "version": 6,
+     "vin": [],
+     "vout": [],
+     "vjoinsplit": [],
+     "valueBalanceZat": 0,
+     "vShieldedSpend": [],
+     "vShieldedOutput": [],
+     "orchard": {
+      "actions": [],
+      "valueBalanceZat": 0
+     },
+     "ironwood": {
+      "actions": [
+       {},
+       {}
+      ],
+      "valueBalanceZat": 10000,
+      "flags": {
+       "enableSpends": true,
+       "enableOutputs": true
+      }
+     }
+    }
+   }
+  },
+  "context": {
+   "code": 200
+  }
+ },
+ "dashboard": {
+  "data": {
+   "6a93c555a0ed880d2dd4b82107131c5ecbdad5fd36622e2bb1fb13411c0d7f27": {
+    "transaction": {
+     "block_id": 3535723,
+     "time": "2026-10-30 09:38:33",
+     "is_coinbase": false
+    }
+   }
+  },
+  "context": {
+   "code": 200
+  }
+ }
+}

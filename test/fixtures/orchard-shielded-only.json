@@ -1,0 +1,66 @@
+{
+ "txid": "28eac301b9942064d7f6bb035e4bef1aca9ef8c0fc8191a1e9a74a1c71e21f75",
+ "recorded": "2026-10-30T10:09:35.371Z",
+ "raw": {
+  "data": {
+   "28eac301b9942064d7f6bb035e4bef1aca9ef8c0fc8191a1e9a74a1c71e21f75": {
+    "decoded_raw_transaction": {
+     "txid": "28eac301b9942064d7f6bb035e4bef1aca9ef8c0fc8191a1e9a74a1c71e21f75",
+     "version": 6,
+     "vin": [],
+     "vout": [],
+     "vjoinsplit": [],
+     "valueBalanceZat": 0,
+     "vShieldedSpend": [],
+     "vShieldedOutput": [],
+     "orchard": {
+      "actions": [
+       {},
+       {},
+       {},
+       {},
+       {},
+       {},
+       {},
+       {},
+       {},
+       {},
+       {},
+       {},
+       {},
+       {},
+       {},
+       {}
+      ],
+      "valueBalanceZat": 80000,
+      "flags": {
+       "enableSpends": true,
+       "enableOutputs": true
+      }
+     },
+     "ironwood": {
+      "actions": [],
+      "valueBalanceZat": 0
+     }
+    }
+   }
+  },
+  "context": {
+   "code": 200
+  }
+ },
+ "dashboard": {
+  "data": {
+   "28eac301b9942064d7f6bb035e4bef1aca9ef8c0fc8191a1e9a74a1c71e21f75": {
+    "transaction": {
+     "block_id": 3535673,
+     "time": "2026-10-30 08:44:42",
+     "is_coinbase": false
+    }
+   }
+  },
+  "context": {
+   "code": 200
+  }
+ }
+}

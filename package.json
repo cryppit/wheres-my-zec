@@ -7,5 +7,5 @@
   "type": "module",
   "private": true,
   "engines": { "node": ">=22.15.0" },
-  "scripts": { "test": "node --test" }
+  "scripts": { "test": "node --test test/*.test.js" }
 }

@@ -1,0 +1,47 @@
+{
+ "txid": "1f0bbb4729ce10eff5b65a36d2df209ec3da25bda2e41397aed7f65ced65fa5c",
+ "recorded": "2026-10-30T10:09:31.918Z",
+ "raw": {
+  "data": {
+   "1f0bbb4729ce10eff5b65a36d2df209ec3da25bda2e41397aed7f65ced65fa5c": {
+    "decoded_raw_transaction": {
+     "txid": "1f0bbb4729ce10eff5b65a36d2df209ec3da25bda2e41397aed7f65ced65fa5c",
+     "version": 5,
+     "vin": [
+      {}
+     ],
+     "vout": [],
+     "vjoinsplit": [],
+     "valueBalanceZat": -125045000,
+     "vShieldedSpend": [],
+     "vShieldedOutput": [
+      {},
+      {}
+     ],
+     "orchard": {
+      "actions": [],
+      "valueBalanceZat": 0
+     },
+     "bindingSig": "152523f74fd11e21803bd12a2af1928922346dce4529e631dd5d5ddf2adb469dd048e8da723d6e658be2aebdc59cdd3ed58cc0175deb549bb8760e6dc2fe670a"
+    }
+   }
+  },
+  "context": {
+   "code": 200
+  }
+ },
+ "dashboard": {
+  "data": {
+   "1f0bbb4729ce10eff5b65a36d2df209ec3da25bda2e41397aed7f65ced65fa5c": {
+    "transaction": {
+     "block_id": 3535722,
+     "time": "2026-10-30 09:35:47",
+     "is_coinbase": false
+    }
+   }
+  },
+  "context": {
+   "code": 200
+  }
+ }
+}
