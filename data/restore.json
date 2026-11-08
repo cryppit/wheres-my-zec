@@ -96,7 +96,7 @@
     "Zallet"
    ],
    "when": "importing a paper or exported transparent key from an old wallet",
-   "advice": "Zkool can import an old transparent private key (starting with 5, K or L): turn 'Use Internal Change' off when you import it. An address with more than 100,000 tiny payouts may still fail to sync until the fix for Zkool issue #1619 ships in a release. Zallet can't import a bare key yet; it only helps if you still have a zcashd wallet.dat file. If the key is very old or was ever shared, treat it as public: move the coins to a new wallet and never send new funds to that address.",
+   "advice": "Zkool can import an old transparent private key (starting with 5, K or L). If the import says the account has no transparent key, turn 'Use Internal Change' off and import again (fixed in Zkool's code on 5 Nov, not yet in a release). If the key imports but syncing stops with 'too many transactions', the address has a very large number of small payments: set the birth height to around your first payment instead of 1, so the search is smaller. Zallet can't import a bare key yet; it only helps if you still have a zcashd wallet.dat file. Nobody needs your key to help you: never send it to anyone who offers help, and if a key is very old or was ever shared, treat it as public and move the coins to a new wallet.",
    "nextParty": "you",
    "source": "https://forum.zcashcommunity.com/t/53450",
    "sourceKind": "forum",
