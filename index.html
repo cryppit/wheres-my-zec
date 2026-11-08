@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <!-- The page may talk only to itself and the public sources the code reads. test/privacy.test.js keeps this list exact. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self' https://api.blockchair.com https://gateway.liquify.com https://midgard.ninerealms.com https://mainnet.api.bridge.nearone.org; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self' https://api.blockchair.com https://gateway.liquify.com https://midgard.ninerealms.com https://mainnet.api.bridge.nearone.org https://rpc.mainnet.fastnear.com; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Where's My ZEC</title>
@@ -106,7 +106,7 @@
     <ul class="small">
       <li>An address: nothing. It's answered on this page. Your seed: never asked for, and refused if pasted.</li>
       <li>A transaction: only the transaction ID, to <code>api.blockchair.com</code>, and to THORChain's records (<code>gateway.liquify.com</code>, or <code>midgard.ninerealms.com</code>) if it's a THORChain swap.</li>
-      <li>Only if you press "Check bridges and swaps": its public output addresses, to <code>mainnet.api.bridge.nearone.org</code>.</li>
+      <li>Only if you press "Check bridges and swaps": its public output addresses, to <code>mainnet.api.bridge.nearone.org</code>. If one is an Omni deposit, the page also reads NEAR's Zcash light client from <code>rpc.mainnet.fastnear.com</code>, sending nothing about you or the transaction, to work out the refund deadline.</li>
       <li>Those services see your IP address, like any website. Nothing is stored: no accounts, cookies or analytics.</li>
     </ul>
   </section>

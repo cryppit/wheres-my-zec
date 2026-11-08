@@ -200,3 +200,28 @@ test("a t3 address warns that some services take only t1 addresses", () => {
   const c = caseForAddress({ address: readAddress("t3XAVsEWuV7Pt15MYwNY5qAFTH7sQkk3T5j"), acceptance, now: NOW });
   assert.match(c.lines.join(" "), /t1/);
 });
+
+const omniDeposit = (window) => ({
+  route: "omni", state: "deposit", evidence: "Reported", nextParty: "see-refund-helper",
+  deposits: [{ vout: 0, address: "t1RTEogVdgA8cWY8zm1uomj5ThPZnbp8BB4", forAccount: "x.near", via: "intents.near", refundHelper: "https://cryppit.github.io/zec-refund-helper/#q=a:0" }],
+  ...(window ? { refund: window } : {}),
+});
+
+test("an Omni deposit shows the refund deadline read from NEAR's Zcash light client", () => {
+  const c = caseForTx({ txid: TXID, tx: synthetic({}), omni: omniDeposit({ open: true, blocksLeft: 93_978, secondsLeft: 93_978 * 25 }), now: NOW });
+  const text = c.lines.join(" ");
+  assert.match(text, /NEAR's Zcash light client/);
+  assert.match(text, /about 27 days/);
+  assert.match(text, /2026-12-06|2026-12-07/);
+});
+
+test("a closed window says a self-serve refund would fail and only the bridge team can return it", () => {
+  const c = caseForTx({ txid: TXID, tx: synthetic({}), omni: omniDeposit({ open: false, blocksLeft: 0, secondsLeft: 0 }), now: NOW });
+  assert.match(c.lines.join(" "), /no longer holds this deposit's block/);
+  assert.match(c.next.text, /bridge team/i);
+});
+
+test("if NEAR couldn't be read, the deposit is still shown, with the deadline as unknown", () => {
+  const c = caseForTx({ txid: TXID, tx: synthetic({}), omni: omniDeposit({ busy: true }), now: NOW });
+  assert.match(c.lines.join(" "), /couldn't read the refund deadline/i);
+});

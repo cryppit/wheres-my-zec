@@ -7,6 +7,30 @@ Live: https://cryppit.github.io/wheres-my-zec/
 Keyless and read-only: it never asks for a seed phrase, private key or viewing key (it refuses them if pasted), never
 holds funds, and never signs anything. Nothing is stored.
 
+## NEAR HACKATHON (Nov 2026)
+
+Built for NEAR HACKATHON, 1–14 Nov 2026. Every commit in this repository is from 9 Nov 2026 onward, inside the window.
+
+**What it does on NEAR.** ZEC that someone sent into the NEAR Omni bridge can get stuck. The bridge lets the depositor
+request a refund themselves, but only while its Zcash light client on NEAR (`zcash-client.bridge.near`) still holds the
+deposit's block. Since Zcash's NU7 upgrade (6 Nov 2026) blocks are 25 seconds apart, so the client's 103,680 blocks last
+about 30 days, not 90, and older deposits lose that option silently. Where's My ZEC finds a deposit through the bridge's
+records, then reads the light client directly from NEAR (`get_mainchain_size`, `get_last_block_header`, `get_config`,
+public view calls that carry nothing about the person) and tells them how many days are left, or that the window has
+closed and who can still help. Swaps through NEAR Intents are handed to Intent Sentinel.
+
+**Tracks:** Privacy & Private AI (keyless, refuses seeds and keys, shielded-aware); Open Innovation.
+
+**Our other project.** Per the rules (Q-015), Cryppit has one other, independent entry: **Intent Sentinel**
+(https://github.com/cryppit/intent-sentinel), a stuck-swap case file for NEAR Intents across 31 chains. This project
+links to it for NEAR Intents swaps; the code bases are separate.
+
+**Baseline (Q-001, Q-005).** Ported from Cryppit's own earlier MIT projects and listed as baseline, not hackathon work:
+the address, transaction and landing modules from Shield Receipt (`src/zcash-address.js`, `src/address.js`,
+`src/fetch.js`, `src/tx.js`, `src/judge.js`, `src/copy.js` and their tests), and the Omni refund rules behind the
+Zcash Refund Helper, which this page links to. New in the window: the input reader, the THORChain, Omni and NEAR
+light-client routes, the case file, the page, the dated tables and the "my wallet shows zero" flow.
+
 ## What it answers
 
 - **A transaction ID.** Whether it confirmed and which pools received value (from the chain, so **Proven**). If it
@@ -40,7 +64,8 @@ Every answer ends with who acts next (you, a service, or nobody) and a ready mes
 - If it carries a THORChain instruction, only its ID also goes to THORChain's public records (`gateway.liquify.com`,
   or `midgard.ninerealms.com` as a fallback).
 - Only when you press "Check bridges and swaps", the transaction's public transparent output addresses go to the Omni
-  bridge's records (`mainnet.api.bridge.nearone.org`).
+  bridge's records (`mainnet.api.bridge.nearone.org`). If one is an Omni deposit, the page also reads NEAR's Zcash light
+  client from `rpc.mainnet.fastnear.com`, with view calls that send nothing about you or the transaction.
 - Those services see your IP address. No cookies, no analytics, no storage. `test/privacy.test.js` keeps the page's
   Content-Security-Policy, the code and this list in step.
 

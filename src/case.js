@@ -92,16 +92,36 @@ function thorchainCase(o) {
   }
 }
 
-function omniCase(o) {
+/** The day a number of seconds after `now` ("YYYY-MM-DD…") falls on, as YYYY-MM-DD in UTC. */
+function dayAfter(now, seconds) {
+  const start = Date.parse(`${String(now).slice(0, 10)}T00:00:00Z`);
+  return Number.isNaN(start) ? null : new Date(start + seconds * 1000).toISOString().slice(0, 10);
+}
+
+/** What NEAR's Zcash light client says about refunding this deposit yourself. */
+function refundLine(refund, now) {
+  if (!refund) return [];
+  if (refund.busy) return ["Couldn't read the refund deadline from NEAR right now; the Refund Helper shows it too."];
+  if (!refund.open) return ["NEAR's Zcash light client no longer holds this deposit's block, so a refund request you send yourself would fail."];
+  const days = Math.floor(refund.secondsLeft / 86_400);
+  const until = dayAfter(now, refund.secondsLeft);
+  return [`NEAR's Zcash light client still holds this deposit's block: about ${days} days left to request a refund yourself${until ? ` (until about ${until} UTC)` : ""}. Since NU7, Zcash blocks are 25 seconds apart, so this window is about 30 days, not 90.`];
+}
+
+function omniCase(o, now) {
+  const closed = o.refund && !o.refund.busy && !o.refund.open;
   return {
     title: "A deposit into the Omni bridge",
     evidence: "Reported",
     lines: [
       ...o.deposits.map((d) => `Output ${d.vout} paid the bridge's deposit address ${d.address}, for NEAR account ${d.forAccount ?? "(not named)"}${d.via ? ` via ${d.via}` : ""}.`),
-      "The Refund Helper checks whether the bridge credited it and, if not, gives the refund steps and the deadline.",
+      ...refundLine(o.refund, now),
+      "The Refund Helper checks whether the bridge credited it and, if not, gives the refund steps.",
     ],
     links: o.deposits.map((d) => ({ label: `Status and refund steps (output ${d.vout})`, url: d.refundHelper })),
-    next: { party: "omni", text: "Open the Refund Helper for this deposit's status and, if it's stuck, the refund steps." },
+    next: closed
+      ? { party: "omni", text: "If the bridge never credited it, only the Omni bridge team can return it now: contact them with this transaction ID." }
+      : { party: "omni", text: "Open the Refund Helper for this deposit's status and, if it's stuck, the refund steps before the deadline." },
   };
 }
 
@@ -137,7 +157,7 @@ export function caseForTx({ txid, tx, thorchain, omni, now }) {
     return finish({ links: [explorer(txid)], route: "thorchain", ...(payoutAsset ? { payoutAsset } : {}), ...thorchainCase(thorchain) }, ref, now);
   }
   if (omni?.state === "deposit") {
-    const c = omniCase(omni);
+    const c = omniCase(omni, now);
     return finish({ ...c, route: "omni", links: [...c.links, explorer(txid)] }, ref, now);
   }
 

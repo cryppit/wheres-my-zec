@@ -15,12 +15,17 @@ function stubFetch({ tx, thor = "not-seen", omni = 404 }) {
   // Midgard's record names the deposit it answers for; point the recorded one at this test's transaction.
   const thorBody = midgard(thor);
   for (const a of thorBody.actions) for (const i of a.in) i.txID = tx.txid.toUpperCase();
-  const fetchImpl = async (url) => {
+  const fetchImpl = async (url, init) => {
     asked.push(url);
     if (url.includes("api.blockchair.com/zcash/raw/")) return json(tx.raw);
     if (url.includes("api.blockchair.com/zcash/dashboards/")) return json(tx.dashboard);
     if (url.includes("/v2/actions?txid=")) return json(thorBody);
     if (url.includes("get_deposit_message")) return omni === 404 ? new Response("", { status: 404 }) : new Response(omni, { status: 200 });
+    if (url === "https://rpc.mainnet.fastnear.com") {
+      const method = JSON.parse(init.body).params.method_name;
+      const value = { get_mainchain_size: 103_680, get_last_block_header: { block_height: tx.raw.data[tx.txid].decoded_raw_transaction ? 3_552_701 : 0 }, get_config: { post_nu7_pow_target_spacing: 25 } }[method];
+      return json({ result: { result: [...Buffer.from(JSON.stringify(value))] } });
+    }
     throw new Error(`unexpected ${url}`);
   };
   return { fetchImpl, asked };
@@ -91,4 +96,17 @@ test("a busy explorer gives the busy case, not an error", async () => {
 test("something unrecognised comes back as the reader's own help text", async () => {
   const r = await check("hello", { fetchImpl: async () => { throw new Error("no network expected"); }, now: NOW });
   assert.match(r.error, /recognise/);
+});
+
+test("NEAR's light client is read only after an Omni deposit is found, and the answer carries the deadline", async () => {
+  const f = fixture("transparent-batch");
+  const msg = readFileSync(new URL("./fixtures/omni/deposit-message.json", import.meta.url), "utf8");
+  const found = stubFetch({ tx: f, omni: msg });
+  const first = await check(f.txid, { fetchImpl: found.fetchImpl, now: NOW });
+  const r = await checkRoutes(first, { fetchImpl: found.fetchImpl, now: NOW });
+  assert.ok(found.asked.includes("https://rpc.mainnet.fastnear.com"));
+  assert.match(r.case.lines.join(" "), /light client/);
+  const none = stubFetch({ tx: f });
+  await checkRoutes(await check(f.txid, { fetchImpl: none.fetchImpl, now: NOW }), { fetchImpl: none.fetchImpl, now: NOW });
+  assert.equal(none.asked.includes("https://rpc.mainnet.fastnear.com"), false);
 });

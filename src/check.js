@@ -7,6 +7,7 @@ import { readAddress } from "./address.js";
 import { fetchTx } from "./fetch.js";
 import { fetchThorchain, thorchainMemo } from "./routes/thorchain.js";
 import { fetchOmniDeposits } from "./routes/omni.js";
+import { fetchZcashLightClient, refundWindow } from "./routes/near.js";
 import { caseForAddress, caseForTx } from "./case.js";
 
 const INTENT_SENTINEL = "https://cryppit.github.io/intent-sentinel/";
@@ -49,6 +50,11 @@ export async function check(raw, { fetchImpl = fetch, now, acceptance, onStep = 
 /** The button: ask the Omni bridge's records about this transaction's transparent outputs. */
 export async function checkRoutes(prev, { fetchImpl = fetch, now } = {}) {
   const txid = prev.input.value;
-  const omni = await fetchOmniDeposits(txid, prev.tx.outputs, fetchImpl);
+  let omni = await fetchOmniDeposits(txid, prev.tx.outputs, fetchImpl);
+  // A deposit's refund deadline comes from NEAR's Zcash light client: read it only once a deposit is found.
+  if (omni.state === "deposit" && Number.isInteger(prev.tx.height)) {
+    const client = await fetchZcashLightClient(fetchImpl);
+    omni = { ...omni, refund: client.busy ? { busy: true } : refundWindow(prev.tx.height, client) };
+  }
   return { ...prev, omni, case: caseForTx({ txid, tx: prev.tx, omni, now }) };
 }
