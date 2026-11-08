@@ -3,6 +3,7 @@ import { check, checkRoutes } from "./check.js";
 import { framed } from "./frame-guard.js";
 import { logoFor, routeLogo } from "./logos.js";
 import { shorten } from "./journey.js";
+import { addServiceUrl, coverage } from "./coverage.js";
 
 const SITE = "https://cryppit.github.io/wheres-my-zec/";
 const INTENT_SENTINEL = "https://cryppit.github.io/intent-sentinel/";
@@ -174,6 +175,68 @@ async function runRoutes(result, button) {
   }
 }
 
+const ANSWER = { yes: "✓", no: "✕", unknown: "?" };
+const ANSWER_WORD = { yes: "can pay", no: "can't pay", unknown: "not checked" };
+
+function logoNode(logo, cls) {
+  return logo.src ? el("img", { src: logo.src, alt: "", class: [cls, logo.light ? "light" : null].filter(Boolean).join(" ") || null }) : el("span", { class: "mono", "aria-hidden": "true" }, logo.mono);
+}
+
+/** The wheel of covered services around the ZEC coin, built like Intent Sentinel's chain wheel. */
+function buildWheel(items) {
+  const wheel = $("wheel");
+  if (!wheel || !items.length) return;
+  wheel.setAttribute("aria-label", `Exchanges and wallets covered: ${items.map((i) => i.name).join(", ")}`);
+  wheel.style.setProperty("--cycle", `${items.length * 0.4}s`);
+  const split = Math.ceil(items.length * 0.6);
+  let n = 0;
+  for (const [kind, list] of [["outer", items.slice(0, split)], ["inner", items.slice(split)]]) {
+    const ring = el("div", { class: `w-ring ${kind}` });
+    list.forEach((item, i) => {
+      const coin = el("span", { class: "w-coin", title: item.name }, logoNode(item.logo));
+      coin.style.setProperty("--a", `${(360 / list.length) * i}deg`);
+      coin.style.setProperty("--d", `${(n++) * 0.4}s`);
+      ring.append(coin);
+    });
+    wheel.append(ring);
+  }
+  wheel.append(el("div", { class: "w-hub" }, el("img", { src: "logos/token-zec.svg", alt: "" }), el("b", {}, "Your ZEC"), el("small", {}, `${items.length} services`)));
+}
+
+function serviceCard(item) {
+  return el("article", { class: "svc", "data-kind": item.kind },
+    el("div", { class: "svc-head" }, logoNode(item.logo), el("div", {}, el("b", {}, item.name), el("small", {}, item.kind))),
+    el("ul", { class: "pays", "aria-label": `${item.name}: which address types it can pay` },
+      item.pays.map((p) => el("li", { class: p.answer, title: `${p.label}: ${ANSWER_WORD[p.answer]}` }, `${ANSWER[p.answer]} ${p.label}`))),
+    el("p", { class: "meta" }, `Checked ${item.checked} · `, el("a", { href: item.source, target: "_blank", rel: "noopener noreferrer" }, `source (${item.sourceKind})`), " · ",
+      el("a", { href: addServiceUrl(item.name), target: "_blank", rel: "noopener noreferrer" }, "correct this")),
+  );
+}
+
+async function buildCoverage() {
+  const table = await loadAcceptance();
+  const { items, counts } = coverage(table.rows);
+  if (!items.length) {
+    $("cover-grid")?.replaceChildren(el("p", { class: "notice" }, "Couldn't load the exchange and wallet table. Reload the page to try again."));
+    return;
+  }
+  $("cover-count").textContent = String(items.length);
+  $("n-exchange").textContent = String(counts.exchange);
+  $("n-wallet").textContent = String(counts.wallet);
+  buildWheel(items);
+  const grid = $("cover-grid");
+  grid.replaceChildren(...items.map(serviceCard));
+  for (const tab of document.querySelectorAll(".cover-tabs button")) {
+    tab.addEventListener("click", () => {
+      for (const t of document.querySelectorAll(".cover-tabs button")) {
+        t.classList.toggle("on", t === tab);
+        t.setAttribute("aria-selected", String(t === tab));
+      }
+      for (const card of grid.children) card.hidden = tab.dataset.kind !== "all" && card.dataset.kind !== tab.dataset.kind;
+    });
+  }
+}
+
 function start() {
   if (framed(window)) {
     document.body.replaceChildren(el("p", { class: "notice" }, "This page was opened inside another site. Open it directly: ", el("a", { href: SITE, target: "_top" }, SITE)));
@@ -189,6 +252,7 @@ function start() {
       run(b.dataset.try);
     });
   }
+  buildCoverage();
   const m = /^#q=([0-9a-f]{64})$/i.exec(location.hash);
   if (m) {
     $("q").value = m[1];

@@ -1,0 +1,52 @@
+name: Add or correct an exchange or wallet
+description: Ask for your exchange or wallet to be listed on Where's My ZEC, or correct what it says. Every row needs a public source.
+title: "Add: "
+labels: ["coverage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping keep the table right. We list a service only from public evidence we can check (your docs,
+        release notes, source code, or a transaction on the chain), and we date every row. There is no paid placement.
+        Never paste a seed phrase, private key or viewing key here.
+  - type: input
+    id: service
+    attributes:
+      label: Exchange or wallet name
+      placeholder: e.g. Gem Wallet
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Is it an exchange or a wallet?
+      options: [Exchange, Wallet]
+    validations:
+      required: true
+  - type: checkboxes
+    id: sends
+    attributes:
+      label: Which Zcash address types can it send ZEC to? (withdrawals, for an exchange)
+      options:
+        - label: Transparent t1 / t3
+        - label: TEX (ZIP 320)
+        - label: Sapling (zs1)
+        - label: Unified address with a transparent receiver
+        - label: Shielded-only unified address (no transparent receiver)
+  - type: dropdown
+    id: shielded
+    attributes:
+      label: "Wallets: can it hold and spend shielded ZEC? Exchanges: does it credit deposits sent from shielded funds?"
+      options: ["Yes", "No", "Not sure"]
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Public evidence
+      description: Links to your docs, release notes, code, or a mainnet transaction that shows each answer above.
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything users should know
+      description: One or two plain sentences, e.g. "Withdraw to a unified address and the coins arrive shielded."
