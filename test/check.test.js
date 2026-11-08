@@ -47,7 +47,7 @@ test("an address is answered locally, with the acceptance table, and nothing is 
   const acceptance = { rows: [{ service: "Zodl", sendsTo: { tex: "yes" } }] };
   const r = await check("tex1s2rt77ggv6q989lr49rkgzmh5slsksa9khdgte", { fetchImpl, now: NOW, acceptance });
   assert.match(r.case.title, /TEX/);
-  assert.match(r.case.lines.join(" "), /Can pay it: Zodl/);
+  assert.deepEqual(r.case.services.can, ["Zodl"]);
   assert.equal(asked.length, 0);
 });
 

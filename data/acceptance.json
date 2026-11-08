@@ -1,6 +1,6 @@
 {
  "checked": "2026-11-09",
- "about": "Which Zcash address types each exchange and wallet takes and sends to, read from each service's own pages where we could and from the Can I Shield and ZecHub registries otherwise; \"unknown\" means we found no source.",
+ "about": "Which Zcash address types each exchange and wallet takes and sends to, read from each service's own pages where we could and from the Can I Shield and ZecHub registries otherwise; \"unknown\" means we found no source. \"transparent\" means t1 addresses; some services reject t3 (P2SH).",
  "rows": [
   {
    "service": "Binance",
@@ -64,7 +64,7 @@
    "sendsTo": {
     "transparent": "yes",
     "tex": "unknown",
-    "sapling": "yes",
+    "sapling": "unknown",
     "unified": "yes",
     "unifiedShieldedOnly": "yes"
    },

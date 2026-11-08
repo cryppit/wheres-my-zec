@@ -2,6 +2,7 @@
 // textContent only. Nothing is sent anywhere: the table is a file on this site.
 import { framed } from "./frame-guard.js";
 import { matchRestore, walletsIn } from "./restore.js";
+import { logoFor } from "./logos.js";
 
 const SITE = "https://cryppit.github.io/wheres-my-zec/restore.html";
 const $ = (id) => document.getElementById(id);
@@ -18,8 +19,12 @@ function render(rows) {
   const picked = matchRestore(rows, $("before").value, $("now").value);
   $("status").textContent = picked.length ? `${picked.length} known cause${picked.length === 1 ? "" : "s"}` : "No known cause for these wallets yet.";
   $("fixes").replaceChildren(...picked.map((r) => el("article", { class: "fix" },
+    el("ul", { class: "chips" }, r.wallets.map((w) => {
+      const l = logoFor(w);
+      return el("li", { class: "chip" }, l.src ? el("img", { src: l.src, alt: "" }) : el("span", { class: "mono", "aria-hidden": "true" }, l.mono), w);
+    })),
     el("h3", {}, r.symptom),
-    el("p", { class: "meta" }, `${r.wallets.join(", ")} · ${r.when}`),
+    el("p", { class: "meta" }, r.when),
     el("p", {}, r.advice),
     el("p", {}, PARTY[r.nextParty] ?? ""),
     el("p", { class: "meta" }, `Checked ${r.checked} · `, el("a", { href: r.source, target: "_blank", rel: "noopener noreferrer" }, `source (${r.sourceKind})`)),
@@ -34,7 +39,8 @@ async function start() {
   let rows = [];
   try {
     const res = await fetch("data/restore.json", { cache: "no-store" });
-    rows = res.ok ? (await res.json()).rows ?? [] : [];
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    rows = (await res.json()).rows ?? [];
   } catch {
     $("status").textContent = "Couldn't load the table of known causes. Please reload the page.";
     return;

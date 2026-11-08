@@ -68,6 +68,8 @@ test("a finished THORChain swap names the payout, as THORChain reports it", () =
   assert.equal(c.next.party, "nobody");
   assert.match(c.title, /THORChain/);
   assert.match(c.lines.join(" "), /0xd0e5999e156957f37E2A676D78248900beF708Ae/);
+  assert.equal(c.route, "thorchain");
+  assert.equal(c.payoutAsset, "BSC.USDT-0X55D398326F99059FF775485246999027B3197955");
   assert.equal(c.canCheckRoutes, false);
 });
 
@@ -106,6 +108,7 @@ test("an Omni bridge deposit names the NEAR account and links to the Refund Help
   const c = caseForTx({ txid: TXID, tx: txOf("transparent-batch"), omni, now: NOW });
   wellFormed(c);
   assert.match(c.title, /Omni bridge/);
+  assert.equal(c.route, "omni");
   assert.ok(c.links.some((l) => l.url === `https://cryppit.github.io/zec-refund-helper/#q=${TXID}:0`));
   assert.match(c.lines.join(" "), /f3de655c/);
 });
@@ -135,9 +138,9 @@ test("an address answer says what it is, who can pay it and who can't, with unkn
   const c = caseForAddress({ address: readAddress(zs), acceptance, now: NOW });
   wellFormed(c);
   assert.match(c.title, /Sapling/);
-  const text = c.lines.join(" ");
-  assert.match(text, /Can pay it: Zodl/);
-  assert.match(text, /Can't: Binance, Kraken/);
+  assert.deepEqual(c.services, { can: ["Zodl"], cant: ["Binance", "Kraken"], unknown: [] });
+  assert.doesNotMatch(c.lines.join(" "), /Can pay it/);
+  assert.equal(c.route, "zcash");
   assert.equal(c.next.party, "you");
 });
 
@@ -152,4 +155,48 @@ test("an address message asks about the address, not about finding ZEC", () => {
   const c = caseForAddress({ address: readAddress("tex1s2rt77ggv6q989lr49rkgzmh5slsksa9khdgte"), acceptance, now: NOW });
   assert.match(c.message, /^Hello, I have a question about a Zcash address\./);
   assert.doesNotMatch(c.message, /find my ZEC/);
+});
+
+const synthetic = (over) => ({
+  txid: "a".repeat(64), height: 1, time: "2026-11-09T00:00:00Z", unknownBundles: [], sprout: false, coinbase: false,
+  outputs: [{ n: 0, scriptHex: `76a914${"00".repeat(20)}88ac`, valueZat: 5, address: "t1VmmGiyjVNeCjxDZzg7vZmd99WyzVby9yC" }], pools: [], ...over,
+});
+
+test("an ID the explorer doesn't know stays out of the message, with a warning in case it was a key", () => {
+  const c = caseForTx({ txid: TXID, tx: { notFound: true }, now: NOW });
+  assert.doesNotMatch(c.message, new RegExp(TXID));
+  assert.match(c.lines.join(" "), /private key/i);
+});
+
+test("evidence words are honest: 'the chain can't tell' is Not visible, Sprout is Unknown, unconfirmed is Reported", () => {
+  assert.equal(caseForTx({ txid: "a".repeat(64), tx: synthetic({ pools: [{ pool: "orchard", actions: 2, valueBalanceZat: 1000, outputsEnabled: true }] }), now: NOW }).evidence, "Not visible");
+  assert.equal(caseForTx({ txid: "a".repeat(64), tx: synthetic({ sprout: true }), now: NOW }).evidence, "Unknown");
+  assert.equal(caseForTx({ txid: "a".repeat(64), tx: synthetic({ height: null, time: null }), now: NOW }).evidence, "Reported");
+  assert.equal(caseForTx({ txid: "a".repeat(64), tx: synthetic({}), now: NOW }).evidence, "Proven");
+});
+
+test("no answer asks for an address field the page doesn't have", () => {
+  for (const tx of [synthetic({}), synthetic({ pools: [{ pool: "orchard", actions: 2, valueBalanceZat: 1000, outputsEnabled: true }] })]) {
+    const c = caseForTx({ txid: tx.txid, tx, now: NOW });
+    assert.doesNotMatch(c.lines.join(" ") + c.message, /Add the address/i);
+  }
+});
+
+test("missing THORChain payout or refund records don't crash, and say they aren't recorded yet", () => {
+  const done = caseForTx({ txid: TXID, tx: synthetic({}), thorchain: { route: "thorchain", state: "done", evidence: "Reported", nextParty: "nobody", payout: null }, now: NOW });
+  assert.match(done.lines.join(" "), /doesn't show the payout yet/i);
+  const back = caseForTx({ txid: TXID, tx: synthetic({}), thorchain: { route: "thorchain", state: "refunded", evidence: "Reported", nextParty: "nobody", reason: "x", refund: null }, now: NOW });
+  assert.match(back.lines.join(" "), /doesn't show the refund transaction yet/i);
+});
+
+test("a busy Omni check can be tried again; a cut-short one says how far it got", () => {
+  assert.equal(caseForTx({ txid: TXID, tx: synthetic({}), omni: { route: "omni", state: "busy", evidence: "Unknown" }, now: NOW }).canCheckRoutes, true);
+  const c = caseForTx({ txid: TXID, tx: synthetic({}), omni: { route: "omni", state: "none", evidence: "Reported", checked: 50, total: 60 }, now: NOW });
+  assert.match(c.lines.join(" "), /first 50 of its 60/);
+  assert.equal(c.canCheckRoutes, false);
+});
+
+test("a t3 address warns that some services take only t1 addresses", () => {
+  const c = caseForAddress({ address: readAddress("t3XAVsEWuV7Pt15MYwNY5qAFTH7sQkk3T5j"), acceptance, now: NOW });
+  assert.match(c.lines.join(" "), /t1/);
 });

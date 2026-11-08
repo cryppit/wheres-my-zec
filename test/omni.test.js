@@ -13,9 +13,23 @@ const CHANGE = "t1VmmGiyjVNeCjxDZzg7vZmd99WyzVby9yC";
 const out = (n, address) => ({ n, scriptHex: "76a914" + "00".repeat(20) + "88ac", valueZat: 1_000, address });
 const memo = { n: 2, scriptHex: "6a0461626364", valueZat: 0, address: null };
 
-test("only transparent outputs are candidates, at most four", () => {
-  assert.deepEqual(omniCandidates([out(0, DEPOSIT), memo, out(1, CHANGE)]).map((o) => o.n), [0, 1]);
-  assert.equal(omniCandidates(Array.from({ length: 9 }, (_, i) => out(i, CHANGE))).length, 4);
+test("only transparent outputs are candidates, each address once", () => {
+  assert.deepEqual(omniCandidates([out(0, DEPOSIT), memo, out(1, CHANGE), out(2, CHANGE)]).map((o) => o.n), [0, 1]);
+});
+
+test("a deposit at the sixth output of a batch is found: every transparent output is checked", async () => {
+  const outs = [...Array.from({ length: 5 }, (_, i) => out(i, `t1${String(i).repeat(33)}`)), out(5, DEPOSIT)];
+  const r = await fetchOmniDeposits(TXID, outs, async (url) => (url.includes(DEPOSIT) ? new Response(MSG, { status: 200 }) : new Response("", { status: 404 })));
+  assert.equal(r.state, "deposit");
+  assert.equal(r.deposits[0].vout, 5);
+});
+
+test("a batch bigger than 50 outputs is checked up to 50, and says so", async () => {
+  const outs = Array.from({ length: 60 }, (_, i) => out(i, `t1${String(i % 10).repeat(31)}${String(i).padStart(2, "0")}`));
+  let asked = 0;
+  const r = await fetchOmniDeposits(TXID, outs, async () => { asked++; return new Response("", { status: 404 }); });
+  assert.equal(asked, 50);
+  assert.deepEqual(r, { route: "omni", state: "none", evidence: "Reported", checked: 50, total: 60 });
 });
 
 test("an output the indexer knows is an Omni deposit, with the NEAR account it was for and a Refund Helper link", async () => {
@@ -40,11 +54,11 @@ test("an output the indexer knows is an Omni deposit, with the NEAR account it w
 
 test("no output known to the indexer: not an Omni deposit", async () => {
   const r = await fetchOmniDeposits(TXID, [out(0, CHANGE)], async () => new Response("", { status: 404 }));
-  assert.deepEqual(r, { route: "omni", state: "none", evidence: "Reported" });
+  assert.deepEqual(r, { route: "omni", state: "none", evidence: "Reported", checked: 1, total: 1 });
 });
 
 test("a failed lookup is busy, never 'not a deposit'", async () => {
-  for (const bad of [async () => new Response("", { status: 502 }), async () => { throw new Error("offline"); }]) {
+  for (const bad of [async () => new Response("", { status: 502 }), async () => new Response("", { status: 400 }), async () => new Response("{}", { status: 200 }), async () => new Response("null", { status: 200 }), async () => { throw new Error("offline"); }]) {
     assert.deepEqual(await fetchOmniDeposits(TXID, [out(0, DEPOSIT)], bad), { route: "omni", state: "busy", evidence: "Unknown" });
   }
 });
@@ -53,5 +67,5 @@ test("a transaction with no transparent outputs needs no lookup", async () => {
   let called = false;
   const r = await fetchOmniDeposits(TXID, [memo], async () => { called = true; });
   assert.equal(called, false);
-  assert.equal(r.state, "none");
+  assert.deepEqual(r, { route: "omni", state: "none", evidence: "Reported", checked: 0, total: 0 });
 });

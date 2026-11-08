@@ -41,7 +41,7 @@
    ],
    "when": "after the in-app Orchard to Ironwood migration or an app update",
    "advice": "First check your recovery phrase is written down and matches what Zodl shows. Then resync: on iOS delete and reinstall Zodl, on Android use Zodl's resync steps. If it is still zero, restore the same phrase in Zkool ('Use Internal Change' on, early birth height) or Zingo. If both still show zero, email support@zodl.com; forum cases like this were still open in October.",
-   "nextParty": "wallet",
+   "nextParty": "you",
    "source": "https://support.zodl.com/article/39-resyncing-zodl-on-ios",
    "sourceKind": "official",
    "checked": "2026-11-09"

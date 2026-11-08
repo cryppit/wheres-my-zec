@@ -2,27 +2,6 @@
 // Where a withdrawal landed, from the transaction and the address someone gave. The chain shows a transparent payment
 // to the address's script directly; for a shielded payment it shows only which pool value went into (and how much,
 // net, when it came from outside the pool), never who received it, so that is all a shielded verdict claims.
-                                                 
-                                                       
-
-                              
-                         
-                                                       
-                           
-                                                                                                               
-                                    
- 
-
-                     
-                                                                                          
-                                              
-                                                                                                                   
-                                      
-                                                                                              
-                                                 
-                                                                                      
-                                                          
-                        
 
 const canReceive = (addr, pool) =>
   addr === null || (pool === "sapling" ? addr.shielded.sapling : addr.shielded.orchard);

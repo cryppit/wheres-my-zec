@@ -1,7 +1,7 @@
-// Ported from cryppit/shield-receipt src/copy.ts (MIT, Cryppit) by stripping its TypeScript types.
+// Ported from cryppit/shield-receipt src/copy.ts (MIT, Cryppit) by stripping its TypeScript types. This page has no
+// address field, so the lines that asked for one now point to the wallet instead.
 // The words for each verdict: short sentences that say what the chain shows. A shielded landing names the pool, never
 // who received it; nothing here calls a payment hidden or private, and nothing says "not paid" without an address.
-                                                       
 
 const POOL_NAME = { ironwood: "Ironwood", orchard: "Orchard", sapling: "Sapling" } ;
 
@@ -57,14 +57,14 @@ export function describe(v, ctx) {
         lines: [
           ...(ctx.addressGiven ? ["No transparent output pays the address you gave."] : []),
           `This transaction spent ZEC from ${pools} to other outputs. It may also have made shielded outputs, which the chain doesn't show.`,
-          ctx.addressGiven ? "Your wallet will show whether it received anything." : "Add the address you gave to rule out a transparent payment.",
+          "Your wallet will show whether it received anything.",
         ],
       };
     }
     case "transparent-only":
       return {
         title: "No shielded pool received value",
-        lines: [`This transaction paid ${v.outputs} transparent output${v.outputs === 1 ? "" : "s"}. Add the address you gave to see whether one of them was yours.`],
+        lines: [`This transaction paid ${v.outputs} transparent output${v.outputs === 1 ? "" : "s"}. Your wallet will show whether one of them was yours.`],
       };
     case "not-paid": {
       const lines = {

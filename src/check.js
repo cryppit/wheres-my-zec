@@ -13,8 +13,7 @@ const INTENT_SENTINEL = "https://cryppit.github.io/intent-sentinel/";
 
 /** A case for an ID that another Cryppit tool follows end to end: nothing is sent from here. */
 function handOff(input, now) {
-  const near = input.kind === "near-tx" || input.kind === "near-account";
-  const title = input.kind === "omni-transfer" ? "An Omni bridge transfer" : near ? "A NEAR transaction or account" : "Another chain";
+  const title = input.kind === "omni-transfer" ? "An Omni bridge transfer" : input.kind === "near-account" ? "A NEAR account" : "An ID from another chain";
   return {
     case: {
       title,
@@ -29,7 +28,7 @@ function handOff(input, now) {
   };
 }
 
-export async function check(raw, { fetchImpl = fetch, now, acceptance } = {}) {
+export async function check(raw, { fetchImpl = fetch, now, acceptance, onStep = () => {} } = {}) {
   const input = readInput(raw);
   if (input.refused) return { refused: input.refused };
   if (input.error) return { error: input.error };
@@ -39,8 +38,10 @@ export async function check(raw, { fetchImpl = fetch, now, acceptance } = {}) {
   if (input.kind !== "zcash-txid") return { input, ...handOff(input, now) };
 
   const txid = input.value;
+  onStep("Reading the Zcash chain…");
   const tx = await fetchTx(txid, fetchImpl);
   const memo = tx && Array.isArray(tx.outputs) && tx.height !== null ? thorchainMemo(tx.outputs) : null;
+  if (memo) onStep("It's a THORChain swap. Asking THORChain's records…");
   const thorchain = memo ? await fetchThorchain(txid, fetchImpl) : undefined;
   return { input, tx, case: caseForTx({ txid, tx, thorchain, now }) };
 }

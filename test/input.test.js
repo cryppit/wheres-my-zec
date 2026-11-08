@@ -73,3 +73,37 @@ test("other chains' hashes point elsewhere, and empty or unknown input asks agai
   assert.match(readInput("").error, /Paste/);
   assert.match(readInput("hello").error, /recognise/);
 });
+
+test("a seed phrase is refused however it was copied: numbered, with commas, quoted, with a full stop, in another language", () => {
+  const words = "abandon ability able about above absent absorb abstract absurd abuse access accident".split(" ");
+  const forms = [
+    words.map((w, i) => `${i + 1}. ${w}`).join("\n"),
+    words.map((w, i) => `${i + 1}) ${w}`).join(" "),
+    words.join(", "),
+    `"${words.join(" ")}"`,
+    `${words.join(" ")}.`,
+    "ábaco abdomen abeja abierto abogado abono aborto abrazo abrir abuelo abuso acabar",
+    "的 一 是 在 不 了 有 和 人 这 中 大",
+  ];
+  for (const f of forms) assert.ok(readInput(f).refused, `not refused: ${f.slice(0, 30)}`);
+});
+
+test("more key formats are refused, even when line-wrapped", () => {
+  const keys = [
+    "secret-spending-key-main1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+    "SKxny894fJe2rmZjeuoE6GVfNkWoXfPp8337VrLLNWG56FjqVUYR",
+    "ZiVKfdhhmQ1fpXaxyW5zRyptQ1z2NqJuD1Ns1gGwvM4fE4wP4Ni2Ru6c",
+    "xprv9s21ZrQH143K3QTDL4LXw2F7HEK3wJUD2nW2nRk4stbPy6cq3jPPqjiChkVvvNKmPGJxWUtg6LnF5kejMRNNU3TGtRBeJgk33yuGBxrMPHi",
+    "uview1abcdefghijklmnopqrstuvwxyz02345\n67890abcdefghijklmnopqrstuvwxyz",
+  ];
+  for (const k of keys) assert.ok(readInput(k).refused, `not refused: ${k.slice(0, 16)}`);
+});
+
+test("an all-capitals address (valid Bech32) is read as the same address", () => {
+  assert.deepEqual(readInput("TEX1S2RT77GGV6Q989LR49RKGZMH5SLSKSA9KHDGTE"), { kind: "zcash-address", value: "tex1s2rt77ggv6q989lr49rkgzmh5slsksa9khdgte" });
+});
+
+test("a 43-44 character base58 string is named as another chain's ID, not as NEAR", async () => {
+  const r = readInput("GW6MLNNSiztTC11haCkzyK2wy62JwtRKsu2zbh6gdAi9");
+  assert.equal(r.kind, "near-tx");
+});

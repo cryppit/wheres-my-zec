@@ -7,7 +7,7 @@
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Where's My ZEC</title>
-<meta name="description" content="Paste a Zcash transaction ID or address. See where the ZEC is, who has to act next, and what to send them. Keyless and read-only.">
+<meta name="description" content="Paste a Zcash transaction ID or address. See where your ZEC went, and who has to move next. Free, keyless, read-only.">
 <link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -17,62 +17,104 @@
 </head>
 <body>
 <header class="top">
-  <a class="brand" href="./"><img src="icons/favicon.svg" alt=""><span class="name">Where's My <em>ZEC</em></span></a>
-  <nav>
-    <a href="restore.html">My wallet shows zero</a>
-    <a href="#how">How it knows</a>
-    <a href="#privacy">Privacy</a>
+  <a class="brand" href="./"><img src="logos/token-zec.svg" alt=""><span class="name">Where's My <em>ZEC</em></span></a>
+  <nav class="seg" aria-label="Pages">
+    <a class="on" href="./" aria-current="page">Check</a>
+    <a href="restore.html">Wallet shows zero</a>
   </nav>
+  <a class="gh" href="https://github.com/cryppit/wheres-my-zec">GitHub</a>
 </header>
+
 <main>
-  <h1>Where's my <em>ZEC</em>?</h1>
-  <p class="lede">Paste a Zcash transaction ID or address. See where the ZEC is, who has to act next, and what to send them.</p>
+  <section class="hero">
+    <div class="hero-text">
+      <p class="badge"><i></i>Free · only reads public records · never asks for your seed</p>
+      <h1>Where's my <em>ZEC?</em></h1>
+      <p class="lede">Paste a Zcash transaction ID or address. See where it went, and who has to move next.</p>
+      <div class="strip" aria-label="Routes, exchanges and wallets it knows">
+        <span class="logos">
+          <img src="logos/token-zec.svg" alt="Zcash" title="Zcash"><img src="logos/rune.svg" alt="THORChain" title="THORChain"><img src="logos/near-protocol.svg" alt="NEAR" title="NEAR"><img src="logos/binance.svg" alt="Binance" title="Binance"><img src="logos/coinbase.svg" alt="Coinbase" title="Coinbase"><img src="logos/kraken.svg" alt="Kraken" title="Kraken"><img src="logos/gemini.svg" alt="Gemini" title="Gemini"><img class="light" src="logos/ledger.svg" alt="Ledger" title="Ledger"><img class="light" src="logos/trezor.svg" alt="Trezor" title="Trezor">
+        </span>
+        <b>26 exchanges &amp; wallets</b>
+      </div>
+      <dl class="stats">
+        <div><dt>0 keys</dt><dd>asked or held</dd></div>
+        <div><dt>1 ID</dt><dd>is all we send</dd></div>
+        <div><dt>3 routes</dt><dd>swap · bridge · exchange</dd></div>
+        <div><dt>14 fixes</dt><dd>for a wallet at zero</dd></div>
+      </dl>
+    </div>
 
-  <form class="ask" id="ask" autocomplete="off">
-    <input id="q" name="q" aria-label="Zcash transaction ID or address" placeholder="Transaction ID, address or explorer link" spellcheck="false">
-    <button class="btn go" id="go" type="submit">Check</button>
-  </form>
-  <p class="tries">Try:
-    <button type="button" data-try="2746a4c744a2ac34e7b9d72eadc174b4e1a8ee44aad3f46fe8947d86e202a360">a THORChain swap</button>
-    <button type="button" data-try="22aa3a8b56bc7dc2aa6a6a2f1da72331db6e4109b2bd7af224a094e3f451c73a">a refunded swap</button>
-    <button type="button" data-try="tex1s2rt77ggv6q989lr49rkgzmh5slsksa9khdgte">a TEX address</button>
-  </p>
-  <p class="safe"><b>Never paste a seed phrase or private key</b> here or into any website. We never ask for one, and this page refuses them.</p>
-
-  <p class="status" id="status" role="status" aria-live="polite"></p>
-  <div id="out"></div>
-
-  <section class="sec" id="how">
-    <h2>How it knows</h2>
-    <p>Every answer carries one word for how sure it is:</p>
-    <div class="grid">
-      <div class="tile"><b>Proven</b>The Zcash chain's own record shows it.</div>
-      <div class="tile"><b>Reported</b>A service's own records say so, for example THORChain or the Omni bridge.</div>
-      <div class="tile"><b>Inferred</b>The facts fit, but nothing proves it.</div>
-      <div class="tile"><b>Not visible</b>A shielded step the chain doesn't show.</div>
-      <div class="tile"><b>Unknown</b>We couldn't check, and we say so.</div>
+    <div class="map-wrap">
+    <figure class="map" aria-label="Where ZEC can go: a swap, a bridge, an exchange or your own wallet">
+      <svg class="paths" viewBox="0 0 400 320" aria-hidden="true">
+        <path d="M200 160 L85 62"/><path d="M200 160 L315 62"/><path d="M200 160 L85 258"/><path d="M200 160 L315 258"/>
+      </svg>
+      <div class="node core"><img src="logos/token-zec.svg" alt=""><b>Your ZEC</b></div>
+      <div class="node n1"><img src="logos/rune.svg" alt=""><b>Swap</b><span>THORChain</span></div>
+      <div class="node n2"><img src="logos/near-protocol.svg" alt=""><b>Bridge</b><span>Omni · NEAR</span></div>
+      <div class="node n3"><img src="logos/binance.svg" alt=""><b>Exchange</b><span>TEX · transparent</span></div>
+      <div class="node n4"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.6-7 9-4-1.4-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg><b>Your wallet</b><span>shielded</span></div>
+    </figure>
+    <p class="map-note">Only the ID leaves your browser. Your seed never does.</p>
     </div>
   </section>
 
+  <section class="card ask-card" aria-labelledby="ask-label">
+    <form id="ask" autocomplete="off">
+      <label id="ask-label" for="q">Transaction ID, address or explorer link</label>
+      <input id="q" name="q" placeholder="Paste it here" spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off">
+      <button class="btn go wide" id="go" type="submit">Find my ZEC →</button>
+    </form>
+    <p class="hint">A transaction ID is the 64-character code in your wallet's history. <span class="warn">Never paste your seed phrase, here or anywhere.</span></p>
+  </section>
+
+  <p class="status" id="status" role="status" aria-live="polite"></p>
+  <div id="out" aria-live="polite"></div>
+
+  <section class="sec">
+    <h2>Real cases. <em>One click each.</em></h2>
+    <div class="cases">
+      <button class="case-btn" type="button" data-try="2746a4c744a2ac34e7b9d72eadc174b4e1a8ee44aad3f46fe8947d86e202a360">
+        <span class="pair"><img src="logos/token-zec.svg" alt=""><img src="logos/binance-smart-chain.svg" alt=""></span>
+        <b>ZEC → USDT on BNB Chain</b><span>Swapped through THORChain</span>
+      </button>
+      <button class="case-btn" type="button" data-try="22aa3a8b56bc7dc2aa6a6a2f1da72331db6e4109b2bd7af224a094e3f451c73a">
+        <span class="pair"><img src="logos/rune.svg" alt=""><img src="logos/token-zec.svg" alt=""></span>
+        <b>1.53 ZEC sent back</b><span>The price moved past its limit</span>
+      </button>
+      <button class="case-btn" type="button" data-try="tex1s2rt77ggv6q989lr49rkgzmh5slsksa9khdgte">
+        <span class="pair"><img src="logos/binance.svg" alt=""><img src="logos/token-zec.svg" alt=""></span>
+        <b>A TEX address</b><span>Who can pay it, who can't</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="sec" id="how">
+    <h2>Every answer says <em>how it knows.</em></h2>
+    <ul class="words">
+      <li data-evidence="Proven"><b>Proven</b> the Zcash chain shows it</li>
+      <li data-evidence="Reported"><b>Reported</b> a service's own records say so</li>
+      <li data-evidence="Inferred"><b>Inferred</b> the facts fit, nothing proves it</li>
+      <li data-evidence="Not visible"><b>Not visible</b> a shielded step</li>
+      <li data-evidence="Unknown"><b>Unknown</b> we couldn't check</li>
+    </ul>
+  </section>
+
   <section class="sec" id="privacy">
-    <h2>Privacy</h2>
-    <ul>
-      <li>We never ask for a seed phrase, private key or viewing key, and this page refuses them if pasted.</li>
-      <li>An address is answered on this page from a dated table. It is not sent anywhere.</li>
-      <li>For a transaction, only the transaction ID goes to <code>api.blockchair.com</code>, a public Zcash explorer.</li>
-      <li>If that transaction carries a THORChain swap instruction, only the transaction ID also goes to THORChain's public records at <code>gateway.liquify.com</code> (or <code>midgard.ninerealms.com</code> if that is down).</li>
-      <li>Only if you press "Check bridges and swaps", the transaction's public transparent output addresses go to the Omni bridge's records at <code>mainnet.api.bridge.nearone.org</code>.</li>
-      <li>Those services see your IP address, as any website does. Nothing is stored: no accounts, no history, no cookies, no analytics.</li>
+    <h2>What leaves your browser</h2>
+    <ul class="small">
+      <li>An address: nothing. It's answered on this page. Your seed: never asked for, and refused if pasted.</li>
+      <li>A transaction: only the transaction ID, to <code>api.blockchair.com</code>, and to THORChain's records (<code>gateway.liquify.com</code>, or <code>midgard.ninerealms.com</code>) if it's a THORChain swap.</li>
+      <li>Only if you press "Check bridges and swaps": its public output addresses, to <code>mainnet.api.bridge.nearone.org</code>.</li>
+      <li>Those services see your IP address, like any website. Nothing is stored: no accounts, cookies or analytics.</li>
     </ul>
   </section>
 </main>
 <footer>
-  Where's My ZEC by Cryppit. Keyless and read-only: it never holds funds or signs anything. Open source under MIT.
-  Also: <a href="https://cryppit.github.io/zec-refund-helper/">Refund Helper</a>,
-  <a href="https://cryppit.github.io/shield-receipt/">Shield Receipt</a>,
-  <a href="https://cryppit.github.io/intent-sentinel/">Intent Sentinel</a>,
-  <a href="https://github.com/cryppit/wheres-my-zec">source</a>.
-  Exchange and wallet tables include facts from <a href="https://canishield.vercel.app">CanIShield</a> (CC BY 4.0) and <a href="https://zechub.wiki">ZecHub</a> (CC BY-SA 4.0); the tables are CC BY-SA 4.0.
+  <span>Where's My ZEC by Cryppit · keyless and read-only · MIT</span>
+  <span>Also: <a href="https://cryppit.github.io/zec-refund-helper/">Refund Helper</a> · <a href="https://cryppit.github.io/shield-receipt/">Shield Receipt</a> · <a href="https://cryppit.github.io/intent-sentinel/">Intent Sentinel</a></span>
+  <span>Logos: web3icons (MIT). Exchange and wallet tables include facts from <a href="https://canishield.vercel.app">CanIShield</a> (CC BY 4.0) and <a href="https://zechub.wiki">ZecHub</a> (CC BY-SA 4.0); the tables are CC BY-SA 4.0.</span>
 </footer>
 </body>
 </html>

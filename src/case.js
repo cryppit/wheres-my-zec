@@ -29,17 +29,22 @@ function finish(c, ref, now, opener = "Hello, I'm trying to find my ZEC.") {
     ...c.lines.slice(0, 2),
     `Checked ${now} with Where's My ZEC (keyless, read-only): ${SITE}`,
   ].join("\n");
-  return { links: [], canCheckRoutes: false, ...c, message };
+  return { links: [], canCheckRoutes: false, route: "zcash", ...c, message };
 }
 
 function thorchainCase(o) {
   const nobodyCheck = (payout) => ({ party: "nobody", text: `Nothing to do. Check the receiving address on ${CHAINS[String(payout?.asset).split(".")[0]] ?? "the other chain"} to see the funds.` });
-  const payoutLine = (p) => `${thorAmount(p.amount, p.asset)} went to ${p.address}${p.txid ? ` (payout transaction ${p.txid})` : ""}.`;
-  const refundLine = (r) => `${formatZec(r.amountZat)} ZEC went back to ${r.address}${r.txid ? ` (transaction ${r.txid})` : ""}.`;
+  const payoutLine = (p) => (p ? `${thorAmount(p.amount, p.asset)} went to ${p.address}${p.txid ? ` (payout transaction ${p.txid})` : ""}.` : "THORChain's record doesn't show the payout yet.");
+  const refundLine = (r) => (r ? `${formatZec(r.amountZat)} ZEC went back to ${r.address}${r.txid ? ` (transaction ${r.txid})` : ""}.` : "THORChain's record doesn't show the refund transaction yet.");
   const sourceNote = "This is THORChain's own record of the swap.";
   switch (o.state) {
     case "done":
-      return { title: "Swapped through THORChain", evidence: "Reported", lines: [`THORChain reports the swap finished. ${payoutLine(o.payout)}`, sourceNote], next: nobodyCheck(o.payout) };
+      return {
+        title: "Swapped through THORChain",
+        evidence: "Reported",
+        lines: [o.payout ? `THORChain reports the swap finished. ${payoutLine(o.payout)}` : "THORChain reports the swap finished, but its record doesn't show the payout yet.", sourceNote],
+        next: nobodyCheck(o.payout),
+      };
     case "partial":
       return {
         title: "Partly swapped through THORChain, the rest sent back",
@@ -113,35 +118,42 @@ export function caseForTx({ txid, tx, thorchain, omni, now }) {
       lines: [
         "The Zcash explorer has no transaction with this ID. Check you copied all of it.",
         "If it's from another chain (Bitcoin, Ethereum, Solana, NEAR), Intent Sentinel follows swaps across 31 chains.",
+        "If what you pasted was a private key rather than a transaction ID, treat it as exposed and move the funds to a new wallet.",
       ],
       links: [{ label: "Check it in Intent Sentinel", url: INTENT_SENTINEL }],
       next: { party: "you", text: "Copy the ID again, or check it in Intent Sentinel." },
-    }, ref, now);
+    }, "ID: (not found on Zcash, so not repeated here)", now);
   }
   if (tx.undecoded) {
     return finish({ title: "The explorer has it but can't read it yet", evidence: "Unknown", lines: ["This can happen with a new transaction format after a network upgrade."], links: [explorer(txid)], next: { party: "you", text: "Try again later." } }, ref, now);
   }
   if (tx.height === null) {
     const w = landingWords({ kind: "mempool" }, { addressGiven: false });
-    return finish({ title: w.title, evidence: "Proven", lines: w.lines, links: [explorer(txid)], next: { party: "nobody", text: "Wait for a block, then check again." } }, ref, now);
+    return finish({ title: w.title, evidence: "Reported", lines: w.lines, links: [explorer(txid)], next: { party: "nobody", text: "Wait for a block, then check again." } }, ref, now);
   }
 
-  if (thorchain) return finish({ links: [explorer(txid)], ...thorchainCase(thorchain) }, ref, now);
+  if (thorchain) {
+    const payoutAsset = thorchain.payout?.asset ?? null;
+    return finish({ links: [explorer(txid)], route: "thorchain", ...(payoutAsset ? { payoutAsset } : {}), ...thorchainCase(thorchain) }, ref, now);
+  }
   if (omni?.state === "deposit") {
     const c = omniCase(omni);
-    return finish({ ...c, links: [...c.links, explorer(txid)] }, ref, now);
+    return finish({ ...c, route: "omni", links: [...c.links, explorer(txid)] }, ref, now);
   }
 
-  const w = landingWords(judge(tx, null), { addressGiven: false });
+  const verdict = judge(tx, null);
+  const w = landingWords(verdict, { addressGiven: false });
+  const evidence = verdict.kind === "unclear" ? "Not visible" : verdict.kind === "unsupported" && verdict.reason === "sprout" ? "Unknown" : "Proven";
+  const scope = omni?.total > omni?.checked ? `the first ${omni.checked} of its ${omni.total} transparent addresses` : "this transaction's addresses";
   const routeNote = omni?.state === "none"
-    ? ["The Omni bridge has no deposit at this transaction's addresses."]
+    ? [`The Omni bridge's records show no deposit at ${scope}.`]
     : omni?.state === "busy" ? ["Couldn't reach the Omni bridge's records; try the check again."] : [];
   return finish({
     title: w.title,
-    evidence: "Proven",
+    evidence,
     lines: [...w.lines, ...routeNote],
     links: [explorer(txid)],
-    canCheckRoutes: !omni,
+    canCheckRoutes: !omni || omni.state === "busy",
     next: { party: "nobody", text: "The chain shows where this transaction's ZEC went. If your wallet doesn't show it, see \"My wallet shows zero\"." },
   }, ref, now);
 }
@@ -184,10 +196,9 @@ export function caseForAddress({ address, acceptance, now }) {
       advice.next,
       `From a transparent wallet: ${advice.transparent.why}`,
       `From a shielded balance: ${advice.shielded.why}`,
-      ...(can.length ? [`Can pay it: ${can.join(", ")}.`] : []),
-      ...(cant.length ? [`Can't: ${cant.join(", ")}.`] : []),
-      ...(unknown.length ? [`Not checked yet: ${unknown.join(", ")}.`] : []),
+      ...(info.kind === "p2sh" ? ["This is a t3 (P2SH) address. Some exchanges accept only t1 addresses, so check with them before giving it out."] : []),
     ],
+    services: { can, cant, unknown },
     next: { party: "you", text: "Give this address only to a service that can pay it." },
   }, ref, now, ADDRESS_OPENER);
 }

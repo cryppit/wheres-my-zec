@@ -2,6 +2,7 @@
 // The txid from whatever was pasted, and the transaction from Blockchair's free API (no key). Only the txid is sent;
 // the address never leaves the page. A rate limit or a network failure is "busy", never "not found".
 import { readBlockchairTx } from "./tx.js";
+import { request } from "./net.js";
 
 const API = "https://api.blockchair.com/zcash";
 
@@ -12,14 +13,12 @@ export function extractTxid(raw) {
   return ids.length === 1 && runs.every((r) => r.length <= 64) ? ids[0].toLowerCase() : null;
 }
 
-                                                                                                                  
-
 class Busy extends Error {}
 
 async function getJson(url, fetchImpl) {
   let res ;
   try {
-    res = await fetchImpl(url);
+    res = await request(fetchImpl, url);
   } catch {
     throw new Busy();
   }
@@ -42,7 +41,10 @@ export async function fetchTx(txid, fetchImpl = fetch) {
       getJson(`${API}/raw/transaction/${txid}`, fetchImpl),
       getJson(`${API}/dashboards/transaction/${txid}`, fetchImpl),
     ]);
-    return readBlockchairTx(raw, dashboard, txid);
+    const facts = readBlockchairTx(raw, dashboard, txid);
+    // Found, but with no block details: we can't tell confirmed from waiting, so we say we couldn't check.
+    if (facts.txid && !dashboard?.data?.[txid]) return { busy: true };
+    return facts;
   } catch (e) {
     if (e instanceof Busy) return { busy: true };
     return { error: e instanceof Error ? e.message : String(e) };

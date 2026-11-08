@@ -100,3 +100,55 @@ test("fetchThorchain sends only the txid, uppercased, and calls a failure busy",
     assert.deepEqual(await fetchThorchain(SWAP, bad), { state: "busy", evidence: "Unknown" });
   }
 });
+
+test("limit swaps and their changes carry THORChain memos too", () => {
+  assert.equal(thorchainMemo([pay, opReturn("=<:ETH.ETH:0xabc:1e8/1/0")]), "=<:ETH.ETH:0xabc:1e8/1/0");
+  assert.equal(thorchainMemo([pay, opReturn("m=<:1ZEC:ETH.ETH:1e8")]), "m=<:1ZEC:ETH.ETH:1e8");
+});
+
+const action = (type, status, out, reason) => ({
+  type, status, in: [{ txID: SWAP.toUpperCase(), coins: [{ asset: "ZEC.ZEC", amount: "100000000" }] }], out,
+  metadata: reason ? { refund: { reason } } : {},
+});
+const coinOut = (asset, amount, address = "t1f2zP1sPiE39kdomdfawXhssTPu8gK3Pv4") => ({ address, txID: "AB".repeat(32), coins: [{ asset, amount }] });
+
+test("a finished swap whose payout isn't recorded yet says so, with no payout", () => {
+  const o = thorchainOutcome({ actions: [action("swap", "success", [])] }, SWAP);
+  assert.equal(o.state, "done");
+  assert.equal(o.payout, null);
+});
+
+test("a refund whose ZEC payout isn't recorded yet has no refund line", () => {
+  const o = thorchainOutcome({ actions: [action("refund", "success", [], "trading halted")] }, SWAP);
+  assert.equal(o.state, "refunded");
+  assert.equal(o.refund, null);
+});
+
+test("'fail to refund' means THORChain kept it, whatever the status says", () => {
+  for (const status of ["success", "pending"]) {
+    const o = thorchainOutcome({ actions: [action("refund", status, [], "not enough asset to pay for fees; fail to refund (33472 ZEC.ZEC)")] }, SWAP);
+    assert.equal(o.state, "too-small", status);
+  }
+});
+
+test("ZEC sent back inside the swap action itself makes it a partial fill", () => {
+  const o = thorchainOutcome({ actions: [action("swap", "success", [coinOut("ETH.ETH", "5000000", "0xabc"), coinOut("ZEC.ZEC", "2000000")])] }, SWAP);
+  assert.equal(o.state, "partial");
+  assert.equal(o.refund.amountZat, 2_000_000);
+});
+
+test("a long reason from THORChain is cut short", () => {
+  const o = thorchainOutcome({ actions: [action("refund", "success", [coinOut("ZEC.ZEC", "1")], "x".repeat(500))] }, SWAP);
+  assert.ok(o.reason.length < 220, `reason is ${o.reason.length} characters`);
+});
+
+test("an empty answer from the first host is checked against the second", async () => {
+  const asked = [];
+  const fetchImpl = async (url) => {
+    asked.push(url);
+    return new Response(JSON.stringify(asked.length === 1 ? { actions: [], count: "0" } : load("swap-success")), { status: 200 });
+  };
+  const o = await fetchThorchain(SWAP, fetchImpl);
+  assert.equal(asked.length, 2);
+  assert.equal(o.state, "done");
+});

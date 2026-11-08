@@ -3,34 +3,6 @@
 // (Zebra's decoded transaction: transparent outputs and the Sapling, Orchard and Ironwood bundles) and its dashboard
 // entry (block height and time). A value balance below zero means value entered that shielded pool.
 
-                                                      
-
-                           
-             
-                                                               
-                  
-                          
-                                                                                        
-                          
- 
-
-                                                                                                    
-
-                          
-               
-                                                      
-                        
-                                              
-                      
-                      
-                    
-                                                                                                
-                           
-                  
-                    
- 
-
-                                   
 const isObj = (v) => typeof v === "object" && v !== null && !Array.isArray(v);
 const list = (v) => (Array.isArray(v) ? v : []);
 const num = (v) => (typeof v === "number" ? v : 0);
