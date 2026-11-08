@@ -58,7 +58,13 @@ export function expect(actual) {
     toBeNull: () => assert.strictEqual(actual, null),
     toHaveLength: (n) => assert.strictEqual(actual.length, n),
     toBeGreaterThan: (n) => assert.ok(actual > n, `${actual} is not greater than ${n}`),
-    not: { toBe: (e) => assert.notStrictEqual(actual, e) },
+    toContain: (e) => assert.ok(actual.includes(e), `${JSON.stringify(actual)} does not contain ${JSON.stringify(e)}`),
+    toMatch: (re) => assert.match(actual, re instanceof RegExp ? re : new RegExp(re)),
+    not: {
+      toBe: (e) => assert.notStrictEqual(actual, e),
+      toContain: (e) => assert.ok(!actual.includes(e), `${JSON.stringify(actual)} contains ${JSON.stringify(e)}`),
+      toMatch: (re) => assert.doesNotMatch(actual, re instanceof RegExp ? re : new RegExp(re)),
+    },
   };
 }
 
