@@ -3,29 +3,31 @@
 // NEAR with three view calls that carry nothing about the person (no address, no txid), and turns a deposit's block
 // height into blocks and seconds left. Since NU7 (6 Nov 2026) Zcash blocks are 25 s apart, so its 103,680 blocks last
 // about 30 days, not 90.
-import { TIMEOUT_MS } from "../net.js";
+import { withTimeout } from "../net.js";
 
 const NEAR_RPC = "https://rpc.mainnet.fastnear.com";
 const CLIENT = "zcash-client.bridge.near";
 
-async function view(fetchImpl, method) {
-  const res = await fetchImpl(NEAR_RPC, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({
-      jsonrpc: "2.0",
-      id: method,
-      method: "query",
-      params: { request_type: "call_function", finality: "final", account_id: CLIENT, method_name: method, args_base64: "e30=" },
-    }),
-    cache: "no-store",
-    signal: AbortSignal.timeout(TIMEOUT_MS),
+function view(fetchImpl, method) {
+  return withTimeout(async (signal) => {
+    const res = await fetchImpl(NEAR_RPC, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: method,
+        method: "query",
+        params: { request_type: "call_function", finality: "final", account_id: CLIENT, method_name: method, args_base64: "e30=" },
+      }),
+      cache: "no-store",
+      signal,
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const body = await res.json();
+    const bytes = body?.result?.result;
+    if (!Array.isArray(bytes)) throw new Error("no result");
+    return JSON.parse(new TextDecoder().decode(Uint8Array.from(bytes)));
   });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const body = await res.json();
-  const bytes = body?.result?.result;
-  if (!Array.isArray(bytes)) throw new Error("no result");
-  return JSON.parse(new TextDecoder().decode(Uint8Array.from(bytes)));
 }
 
 /** How many blocks the client keeps, its newest block, and today's block spacing; `{ busy: true }` on any failure. */
