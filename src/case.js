@@ -4,6 +4,8 @@
 import { judge } from "./judge.js";
 import { describe as landingWords, formatZec } from "./copy.js";
 import { classifyZcashAddress, describeZcashAddress, zcashSendAdvice } from "./zcash-address.js";
+import { partiesFor, stop } from "./journey.js";
+import { chainLogo } from "./logos.js";
 
 const SITE = "https://cryppit.github.io/wheres-my-zec/";
 const ADDRESS_OPENER = "Hello, I have a question about a Zcash address.";
@@ -114,8 +116,9 @@ function omniCase(o, now) {
     title: "A deposit into the Omni bridge",
     evidence: "Reported",
     lines: [
-      ...o.deposits.map((d) => `Output ${d.vout} paid the bridge's deposit address ${d.address}, for NEAR account ${d.forAccount ?? "(not named)"}${d.via ? ` via ${d.via}` : ""}.`),
+      // The deadline leads: it's the one thing the person must act on in time.
       ...refundLine(o.refund, now),
+      ...o.deposits.map((d) => `Output ${d.vout} paid the bridge's deposit address ${d.address}, for NEAR account ${d.forAccount ?? "(not named)"}${d.via ? ` via ${d.via}` : ""}.`),
       "The Refund Helper checks whether the bridge credited it and, if not, gives the refund steps.",
     ],
     links: o.deposits.map((d) => ({ label: `Status and refund steps (output ${d.vout})`, url: d.refundHelper })),
@@ -123,6 +126,47 @@ function omniCase(o, now) {
       ? { party: "omni", text: "If the bridge never credited it, only the Omni bridge team can return it now: contact them with this transaction ID." }
       : { party: "omni", text: "Open the Refund Helper for this deposit's status and, if it's stuck, the refund steps before the deadline." },
   };
+}
+
+const ZEC_LOGO = "logos/token-zec.svg";
+const ZEC_SENT = stop("Your ZEC", ZEC_LOGO, "passed", "proven");
+const POOL_NAMES = { ironwood: "Ironwood pool", orchard: "Orchard pool", sapling: "Sapling pool" };
+
+/** Where a plain transaction's value went, as stops: always "Sent", then the pool or outputs the chain shows. */
+function landingStops(v) {
+  const sent = stop("Sent", ZEC_LOGO, "passed", "proven");
+  switch (v.kind) {
+    case "shielded": {
+      const pool = v.parts.find((p) => p.pool !== "unknown")?.pool;
+      return [sent, stop(POOL_NAMES[pool] ?? "Shielded pool", ZEC_LOGO, "passed", "proven")];
+    }
+    case "transparent":
+    case "transparent-only":
+      return [sent, stop("Transparent address", ZEC_LOGO, "passed", "proven")];
+    case "unclear":
+      return [sent, stop("Shielded", ZEC_LOGO, "here", "not_visible")];
+    default:
+      return [sent, stop("Not read", ZEC_LOGO, "here", "unknown")];
+  }
+}
+
+/** A THORChain swap as stops: your ZEC, THORChain, then where it went (the payout chain, or back to you). */
+function thorchainJourney(o, next) {
+  const thor = (state, cls) => stop("THORChain", "logos/rune.svg", state, cls);
+  const chain = String(o.payout?.asset ?? "").split(".")[0];
+  const payout = () => stop(CHAINS[chain] ?? "Payout", chainLogo(o.payout?.asset) ?? ZEC_LOGO, "passed", "reported");
+  const back = () => stop("Back to you", ZEC_LOGO, "passed", "reported");
+  const stops = {
+    done: () => [ZEC_SENT, thor("passed", "reported"), payout()],
+    partial: () => [ZEC_SENT, thor("passed", "reported"), payout(), back()],
+    refunded: () => [ZEC_SENT, thor("passed", "reported"), back()],
+    "too-small": () => [ZEC_SENT, thor("failed", "reported")],
+    "refund-pending": () => [ZEC_SENT, thor("here", "reported"), stop("Back to you", ZEC_LOGO, "ahead", "unknown")],
+    pending: () => [ZEC_SENT, thor("here", "reported"), stop("Payout", ZEC_LOGO, "ahead", "unknown")],
+    "not-seen": () => [ZEC_SENT, thor("here", "unknown")],
+    busy: () => [ZEC_SENT, thor("here", "unknown")],
+  }[o.state] ?? (() => [ZEC_SENT, thor("passed", "reported")]);
+  return { stops: stops(), parties: partiesFor(next, ["thorchain"]) };
 }
 
 /** The case for a pasted transaction ID. `tx` is fetchTx's answer; `thorchain` and `omni` are route answers, if asked. */
@@ -149,16 +193,26 @@ export function caseForTx({ txid, tx, thorchain, omni, now }) {
   }
   if (tx.height === null) {
     const w = landingWords({ kind: "mempool" }, { addressGiven: false });
-    return finish({ title: w.title, evidence: "Reported", lines: w.lines, links: [explorer(txid)], next: { party: "nobody", text: "Wait for a block, then check again." } }, ref, now);
+    return finish({
+      title: w.title, evidence: "Reported", lines: w.lines, links: [explorer(txid)], next: { party: "nobody", text: "Wait for a block, then check again." },
+      stops: [stop("Sent", ZEC_LOGO, "here", "reported"), stop("In a block", ZEC_LOGO, "ahead", "unknown")],
+      parties: partiesFor("nobody"),
+    }, ref, now);
   }
 
   if (thorchain) {
     const payoutAsset = thorchain.payout?.asset ?? null;
-    return finish({ links: [explorer(txid)], route: "thorchain", ...(payoutAsset ? { payoutAsset } : {}), ...thorchainCase(thorchain) }, ref, now);
+    const c = thorchainCase(thorchain);
+    return finish({ links: [explorer(txid)], route: "thorchain", ...(payoutAsset ? { payoutAsset } : {}), ...c, ...thorchainJourney(thorchain, c.next.party) }, ref, now);
   }
   if (omni?.state === "deposit") {
     const c = omniCase(omni, now);
-    return finish({ ...c, route: "omni", links: [...c.links, explorer(txid)] }, ref, now);
+    const closed = omni.refund && !omni.refund.busy && !omni.refund.open;
+    return finish({
+      ...c, route: "omni", links: [...c.links, explorer(txid)],
+      stops: [ZEC_SENT, stop("Omni bridge", "logos/near-protocol.svg", closed ? "failed" : "here", "reported"), stop("NEAR account", "logos/near-protocol.svg", "ahead", "unknown")],
+      parties: partiesFor(c.next.party, ["omni"]),
+    }, ref, now);
   }
 
   const verdict = judge(tx, null);
@@ -174,6 +228,8 @@ export function caseForTx({ txid, tx, thorchain, omni, now }) {
     lines: [...w.lines, ...routeNote],
     links: [explorer(txid)],
     canCheckRoutes: !omni || omni.state === "busy",
+    stops: landingStops(verdict),
+    parties: partiesFor("nobody"),
     next: { party: "nobody", text: "The chain shows where this transaction's ZEC went. If your wallet doesn't show it, see \"My wallet shows zero\"." },
   }, ref, now);
 }

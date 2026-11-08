@@ -1,12 +1,13 @@
 // The paste box and the case card. Every piece of text from a source is set with textContent, never as HTML.
 import { check, checkRoutes } from "./check.js";
 import { framed } from "./frame-guard.js";
-import { chainLogo, logoFor, routeLogo } from "./logos.js";
+import { logoFor, routeLogo } from "./logos.js";
+import { shorten } from "./journey.js";
 
 const SITE = "https://cryppit.github.io/wheres-my-zec/";
 const INTENT_SENTINEL = "https://cryppit.github.io/intent-sentinel/";
-const CHAIN_NAMES = { BSC: "BNB Chain", ETH: "Ethereum", BTC: "Bitcoin", SOL: "Solana", BASE: "Base", AVAX: "Avalanche", TRON: "Tron", XRP: "XRP Ledger", LTC: "Litecoin", DOGE: "Dogecoin", BCH: "Bitcoin Cash", ZEC: "Zcash" };
 const $ = (id) => document.getElementById(id);
+const CLS_LABELS = { proven: "Proven", reported: "Reported", inferred: "Inferred", not_visible: "Not visible", unknown: "Unknown" };
 
 /** Today in UTC, as "YYYY-MM-DD UTC": the same answer on every machine. */
 function today() {
@@ -57,17 +58,31 @@ async function loadAcceptance() {
   return acceptance;
 }
 
+function track(stops) {
+  return el("div", { class: "track", role: "list", "aria-label": "Where the ZEC went" }, stops.map((st, i) => {
+    const node = el("div", { class: `stop ${st.state}`, role: "listitem" },
+      el("span", { class: "coin" }, el("img", { src: st.logo, alt: "", class: /zodl|keystone|zkool|okx|ledger|trezor/.test(st.logo) ? "light" : null })),
+      el("b", {}, st.name),
+      el("span", { class: `cls c-${st.cls}` }, CLS_LABELS[st.cls] ?? st.cls),
+    );
+    node.style.setProperty("--i", String(i));
+    return node;
+  }));
+}
+
 function renderCase(result) {
   const c = result.case;
-  const card = el("article", { class: "case", "data-evidence": c.evidence },
+  const [first, ...rest] = c.lines;
+  const tone = c.stops?.some((st) => st.state === "failed") ? "failed"
+    : c.evidence === "Unknown" ? "unknown"
+    : c.stops?.some((st) => st.state === "here") ? "waiting"
+    : c.next.party === "nobody" ? "done" : "act";
+  const card = el("article", { class: "case", "data-evidence": c.evidence, "data-tone": tone },
     el("div", { class: "case-head" }, el("img", { src: routeLogo(c.route), alt: "" }), el("span", { class: "pill" }, c.evidence)),
     el("h2", { tabindex: "-1" }, c.title),
-    el("ul", {}, c.lines.map((l) => el("li", {}, l))),
+    first ? el("p", { class: "summary" }, shorten(first)) : null,
   );
-  if (c.payoutAsset && chainLogo(c.payoutAsset)) {
-    const chain = String(c.payoutAsset).split(".")[0];
-    card.append(el("p", { class: "on-chain" }, el("img", { src: chainLogo(c.payoutAsset), alt: "" }), `Paid out on ${CHAIN_NAMES[chain] ?? chain}`));
-  }
+  if (c.stops?.length) card.append(track(c.stops));
   if (c.services) {
     const groups = [["can", "Can pay it"], ["cant", "Can't pay it"], ["unknown", "Not checked yet"]];
     for (const [key, label] of groups) {
@@ -76,9 +91,11 @@ function renderCase(result) {
     if (acceptance?.failed) card.append(el("p", { class: "notice" }, "Couldn't load the exchange and wallet table. Reload the page to try again."));
     else if (acceptance?.checked) card.append(el("p", { class: "hint" }, `From our table checked ${acceptance.checked}. Services change, so check with them too.`));
   }
-  card.append(el("div", { class: "next" }, el("b", {}, "Who acts next"), c.next.text));
-  if (c.links?.length) {
-    card.append(el("p", { class: "links" }, c.links.map((l) => el("a", { href: l.url, target: "_blank", rel: "noopener noreferrer" }, l.label))));
+  if (c.parties?.length) {
+    card.append(el("div", { class: "movers" }, el("b", {}, "Who moves next"), c.parties.map((p) => el("span", { class: `party${p.lit ? " lit" : ""}` }, el("span", { class: "dot" }), p.label))));
+    card.append(el("p", { class: "next plain" }, c.next.text));
+  } else {
+    card.append(el("div", { class: "next" }, el("b", {}, "Who acts next"), c.next.text));
   }
   if (c.copy) card.append(el("p", { class: "links" }, copyButton(c.copy, "Copy the ID")));
   if (c.canCheckRoutes) {
@@ -91,7 +108,12 @@ function renderCase(result) {
       copyButton(result.input.value, "Copy the ID"),
     ));
   }
-  card.append(el("div", { class: "msg" }, el("label", { for: "msg" }, "A message to send them (only public facts in it):"), el("textarea", { id: "msg", readonly: true, rows: 6 }, c.message), copyButton(c.message, "Copy the message")));
+  const details = el("details", { class: "more" }, el("summary", {}, "Details and a message to send"),
+    rest.length ? el("ul", {}, rest.map((l) => el("li", { title: l }, shorten(l)))) : null,
+    c.links?.length ? el("p", { class: "links" }, c.links.map((l) => el("a", { href: l.url, target: "_blank", rel: "noopener noreferrer" }, l.label))) : null,
+    el("div", { class: "msg" }, el("label", { for: "msg" }, "A message to send them (only public facts in it):"), el("textarea", { id: "msg", readonly: true, rows: 6 }, c.message), copyButton(c.message, "Copy the message")),
+  );
+  card.append(details);
   return card;
 }
 
@@ -125,10 +147,11 @@ function remember(result) {
 async function run(raw) {
   const mine = ++current;
   $("go").disabled = true;
-  $("out").replaceChildren();
+  const step = el("span", {}, "Reading the records…");
+  $("out").replaceChildren(el("div", { class: "reading", role: "status" }, el("b", {}, "Finding your ZEC"), step));
   $("status").textContent = "Reading the records…";
   try {
-    const onStep = (s) => { if (mine === current) $("status").textContent = s; };
+    const onStep = (s) => { if (mine === current) { $("status").textContent = s; step.textContent = s; } };
     const result = await check(raw, { fetchImpl: fetch, now: today(), acceptance: await loadAcceptance(), onStep });
     if (mine === current) remember(result);
     show(result, mine);
