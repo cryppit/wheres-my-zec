@@ -34,3 +34,29 @@ test("the causes shown match the situation and the wallet; 'not sure' shows ever
   assert.deepEqual(causesFor(rows, "restored", null).map((r) => r.id), ["change", "cake"]);
   assert.deepEqual(causesFor(rows, "send-failed", "Zodl"), []);
 });
+
+import { badgeFor } from "../src/restore.js";
+
+test("a cause from the wallet's own guide says so", () => {
+  assert.deepEqual(badgeFor({ sourceKind: "official" }), { level: "official", label: "From the wallet's own guide" });
+});
+
+test("a users' report confirmed by an official second source says both", () => {
+  assert.deepEqual(badgeFor({ sourceKind: "forum", confirmedBy: { url: "https://github.com/x/y/issues/1", kind: "official" } }), {
+    level: "confirmed",
+    label: "Reported by users · confirmed by the wallet's code or docs",
+  });
+});
+
+test("a users' report with no official second source is marked not yet confirmed", () => {
+  assert.deepEqual(badgeFor({ sourceKind: "forum" }), { level: "reported", label: "Reported by users, not yet confirmed" });
+  assert.deepEqual(badgeFor({ sourceKind: "forum", confirmedBy: { url: "https://example.org", kind: "secondary" } }), { level: "reported", label: "Reported by users, not yet confirmed" });
+  assert.deepEqual(badgeFor({ sourceKind: "secondary" }), { level: "reported", label: "Reported by users, not yet confirmed" });
+});
+
+test("every row in the table gets a badge, and any second source is an https link", () => {
+  for (const r of real) {
+    assert.ok(["official", "confirmed", "reported"].includes(badgeFor(r).level), r.id);
+    if (r.confirmedBy) assert.match(r.confirmedBy.url, /^https:\/\//, r.id);
+  }
+});

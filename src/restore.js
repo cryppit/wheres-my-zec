@@ -20,3 +20,13 @@ export function causesFor(rows, situation, wallet) {
   const w = wallet.toLowerCase();
   return inSituation.filter((r) => (r.wallets ?? []).some((x) => x.toLowerCase() === w));
 }
+
+/**
+ * How sure a cause is, for the badge on its card: from the wallet's own guide; a users' report that the wallet's own
+ * code or docs confirm (`confirmedBy` with kind "official"); or a users' report not yet confirmed.
+ */
+export function badgeFor(row) {
+  if (row.sourceKind === "official") return { level: "official", label: "From the wallet's own guide" };
+  if (row.confirmedBy?.kind === "official") return { level: "confirmed", label: "Reported by users · confirmed by the wallet's code or docs" };
+  return { level: "reported", label: "Reported by users, not yet confirmed" };
+}

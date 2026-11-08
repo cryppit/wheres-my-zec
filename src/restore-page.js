@@ -1,7 +1,7 @@
 // "My wallet shows zero": three steps (what happened, which wallet, what to do) over the dated table of known causes.
 // Text is set with textContent only. Nothing is sent anywhere: the table is a file on this site.
 import { framed } from "./frame-guard.js";
-import { SITUATIONS, causesFor, walletsFor } from "./restore.js";
+import { SITUATIONS, badgeFor, causesFor, walletsFor } from "./restore.js";
 import { logoFor } from "./logos.js";
 
 const SITE = "https://cryppit.github.io/wheres-my-zec/restore.html";
@@ -72,13 +72,19 @@ function pickWallet(situation) {
 
 function causeCard(r) {
   const steps = r.advice.split(/(?<=[.!?])\s+(?=[A-Z])/).filter(Boolean);
+  const badge = badgeFor(r);
+  const link = (url, label) => el("a", { href: url, target: "_blank", rel: "noopener noreferrer" }, label);
   return el("article", { class: "fix" },
-    el("ul", { class: "chips" }, r.wallets.map((w) => el("li", { class: "chip" }, logo(w), w))),
+    el("div", { class: "fix-top" },
+      el("ul", { class: "chips" }, r.wallets.map((w) => el("li", { class: "chip" }, logo(w), w))),
+      el("span", { class: `badge-sure ${badge.level}` }, badge.label),
+    ),
     el("h3", {}, r.symptom),
     el("p", { class: "meta" }, r.when),
     el("ol", { class: "todo" }, steps.map((s) => el("li", {}, s))),
     el("div", { class: "next" }, el("b", {}, "Who acts next"), PARTY[r.nextParty] ?? ""),
-    el("p", { class: "meta" }, `Checked ${r.checked} · `, el("a", { href: r.source, target: "_blank", rel: "noopener noreferrer" }, `source (${r.sourceKind})`)),
+    el("p", { class: "meta" }, `Checked ${r.checked} · `, link(r.source, r.sourceKind === "official" ? "the wallet's guide" : "the users' report"),
+      r.confirmedBy ? [" · ", link(r.confirmedBy.url, "confirmed here")] : null),
   );
 }
 

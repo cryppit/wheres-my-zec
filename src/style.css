@@ -192,3 +192,9 @@ footer { display: grid; gap: 6px; max-width: 1080px; margin: 0 auto; padding: 24
 .todo li { margin: 6px 0; }
 .todo li::marker { color: var(--lime); font-weight: 800; }
 @media (max-width: 640px) { .tiles { grid-template-columns: 1fr; } }
+
+.fix-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.badge-sure { padding: 4px 10px; border-radius: 99px; border: 1px solid; font: 700 12px var(--mono); }
+.badge-sure.official { color: var(--lime); border-color: rgba(221, 242, 74, 0.5); background: rgba(221, 242, 74, 0.08); }
+.badge-sure.confirmed { color: var(--cyan); border-color: rgba(94, 224, 240, 0.5); background: rgba(94, 224, 240, 0.08); }
+.badge-sure.reported { color: var(--amber); border-color: rgba(255, 181, 71, 0.5); background: rgba(255, 181, 71, 0.08); }
