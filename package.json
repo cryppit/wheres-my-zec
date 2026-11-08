@@ -1,0 +1,11 @@
+{
+  "name": "wheres-my-zec",
+  "version": "0.1.0",
+  "description": "Where is my ZEC, who has to act next, and what do I send them. Keyless, read-only, never asks for a seed or key.",
+  "license": "MIT",
+  "author": "Cryppit",
+  "type": "module",
+  "private": true,
+  "engines": { "node": ">=22.15.0" },
+  "scripts": { "test": "node --test" }
+}
