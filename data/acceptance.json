@@ -208,9 +208,9 @@
    "sendsTo": {
     "transparent": "yes",
     "tex": "yes",
-    "sapling": "unknown",
+    "sapling": "yes",
     "unified": "yes",
-    "unifiedShieldedOnly": "unknown"
+    "unifiedShieldedOnly": "yes"
    },
    "holdsShielded": "yes",
    "note": "Shielded wallet that pays Binance's tex1 addresses by itself (it hops through a one-time transparent address). Since NU7 it needs version 3.19.0 or later. To open a Zodl seed in another wallet, use Zkool with 'Use Internal Change' on, or Zingo.",
@@ -333,13 +333,13 @@
    "acceptsShieldedDeposit": null,
    "sendsTo": {
     "transparent": "unknown",
-    "tex": "unknown",
+    "tex": "no",
     "sapling": "unknown",
     "unified": "unknown",
     "unifiedShieldedOnly": "unknown"
    },
    "holdsShielded": "yes",
-   "note": "Hardware signer used with Zodl or Vizor. Shielded ZEC needs the Cypherpunk firmware, 3.0.2 or later since Ironwood. What it can send to follows the app you pair it with.",
+   "note": "Hardware signer used with Zodl or Vizor. Shielded ZEC needs the Cypherpunk firmware, 3.0.2 or later since Ironwood; on 9 Nov firmware 3.1.x and 3.2.0 still rejected Zodl’s larger signing requests with “Invalid QR Code” (KeystoneHQ/keystone3-firmware#2294), while 3.0.4 accepted them. It can’t pay a TEX address such as Binance’s directly: Zodl walks you through a two-step send instead. Otherwise what it can send to follows the app you pair it with.",
    "source": "https://support.zodl.com/article/49-upgrading-keystone-firmware",
    "sourceKind": "official",
    "checked": "2026-11-09"
@@ -468,6 +468,240 @@
    "note": "Transparent only. Plain sends moved to NU7's transaction format; ZEC swaps through SwapKit still stop with an error before signing, so no funds move.",
    "source": "https://zechub.wiki/using-zcash/wallets",
    "sourceKind": "registry",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "NEAR Intents (1Click)",
+   "kind": "exchange",
+   "depositAddress": "transparent",
+   "acceptsShieldedDeposit": "unknown",
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "no",
+    "unified": "unknown",
+    "unifiedShieldedOnly": "unknown"
+   },
+   "holdsShielded": null,
+   "note": "The swap and bridge route behind near-intents.org and many wallets’ swaps, Zodl’s included. Its docs list ZEC payouts as transparent only (t1 or t3); its bridge code also handles TEX and unified addresses with an Orchard receiver, but until the docs say so, give a t1 address unless your wallet runs the swap for you. Sapling (zs) addresses are not accepted.",
+   "source": "https://docs.near-intents.org/resources/chain-support.md",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Robinhood",
+   "kind": "exchange",
+   "depositAddress": "none",
+   "acceptsShieldedDeposit": "no",
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "no",
+    "unified": "no",
+    "unifiedShieldedOnly": "no"
+   },
+   "holdsShielded": null,
+   "note": "Robinhood does not take ZEC deposits at all, so never send ZEC to Robinhood. It withdraws only to t1 addresses: its help page says shielded and unified addresses are not supported. Shield the coins in your own wallet afterwards.",
+   "source": "https://robinhood.com/us/en/support/articles/cryptocurrency-wallets",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "ChangeNOW",
+   "kind": "exchange",
+   "depositAddress": "unknown",
+   "acceptsShieldedDeposit": "unknown",
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "yes",
+    "sapling": "no",
+    "unified": "no",
+    "unifiedShieldedOnly": "no"
+   },
+   "holdsShielded": null,
+   "note": "Instant swap service. On 9 Nov its public address check accepted t1 and TEX payout addresses and rejected Sapling (zs) and unified (u1) ones, so ask for ZEC to a t1 address and shield it in your wallet. We found nothing on whether coins sent from a shielded wallet are credited, and no NU7 statement.",
+   "source": "https://api.changenow.io/v2/validate/address?currency=zec&address=tex1s2rt77ggv6q989lr49rkgzmh5slsksa9khdgte",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "SwapKit (THORSwap)",
+   "kind": "exchange",
+   "depositAddress": "unknown",
+   "acceptsShieldedDeposit": "yes",
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "no",
+    "unified": "yes",
+    "unifiedShieldedOnly": "unknown"
+   },
+   "holdsShielded": null,
+   "note": "The swap service behind THORSwap and Vultisig's swaps, routing ZEC through Maya or THORChain. Its docs say t1 and t3 payouts work, unified (u1) payouts go only through Maya, and Sapling (zs) addresses are refused. Since NU7 it builds only the new (v5) transaction format, so update the wallet you swap from.",
+   "source": "https://docs.swapkit.dev/spotlights/chain-specific-guides/zcash-shielded-and-unified-addresses",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Vizor",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "yes",
+    "sapling": "yes",
+    "unified": "yes",
+    "unifiedShieldedOnly": "yes"
+   },
+   "holdsShielded": "yes",
+   "note": "Shielded wallet from the Keplr team, for phones and desktops, that also pairs with Keystone. It sends to t1, TEX, Sapling and unified addresses. Version 0.0.63 says it is ready for NU7, so update to that version or later.",
+   "source": "https://github.com/chainapsis/vizor-wallet",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "HitBTC",
+   "kind": "exchange",
+   "depositAddress": "unknown",
+   "acceptsShieldedDeposit": "unknown",
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "no",
+    "sapling": "no",
+    "unified": "no",
+    "unifiedShieldedOnly": "no"
+   },
+   "holdsShielded": null,
+   "note": "HitBTC's own API accepts only withdrawal addresses that start with t1 or t3, so withdraw to a t1 address; TEX, Sapling and unified addresses are refused. ZEC deposits and withdrawals were open on 9 Nov. HitBTC has made no NU7 statement.",
+   "source": "https://api.hitbtc.com/api/3/public/currency/ZEC",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Atomic Wallet",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "no",
+    "unified": "unknown",
+    "unifiedShieldedOnly": "no"
+   },
+   "holdsShielded": "no",
+   "note": "Transparent only. Atomic’s help page says its ZEC address is transparent and that sending to a shielded address “is not going to work”. The page dates from May 2024; for shielded ZEC use a shielded wallet such as Zodl, Zingo or Zkool. Atomic has made no NU7 statement.",
+   "source": "https://support.atomicwallet.io/article/341-how-do-i-send-a-shielded-zec-transaction",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Noir Wallet",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "yes",
+    "sapling": "unknown",
+    "unified": "unknown",
+    "unifiedShieldedOnly": "unknown"
+   },
+   "holdsShielded": "yes",
+   "note": "Browser-extension wallet that holds shielded ZEC. Its changelog says it pays TEX addresses from transparent or shielded funds, and version 1.0.41 is updated for NU7. We found no rule for Sapling or unified recipients.",
+   "source": "https://github.com/NoirWallet/noir-wallet",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "LeoDex (Mane)",
+   "kind": "exchange",
+   "depositAddress": "unknown",
+   "acceptsShieldedDeposit": "unknown",
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "unknown",
+    "unified": "yes",
+    "unifiedShieldedOnly": "unknown"
+   },
+   "holdsShielded": null,
+   "note": "Swap aggregator, with the Mane wallet app, that routes through NEAR Intents, THORChain and Maya. Its ZEC page says a t1 or t3 address gets transparent ZEC and a u1 address from a shielded wallet gets shielded ZEC. It also warns that a u1 address alone does not prove you will receive shielded ZEC, because the route it picks signs the payout. Its own ZEC signing switched to NU7 at block 3,543,405.",
+   "source": "https://leodex.io/asset/ZEC.ZEC",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Zallet",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "yes",
+    "sapling": "yes",
+    "unified": "yes",
+    "unifiedShieldedOnly": "yes"
+   },
+   "holdsShielded": "yes",
+   "note": "The Zcash full-node wallet that replaces zcashd (beta). It sends to t1, TEX, Sapling and unified addresses; sending to t1 or TEX needs the 'AllowRevealedRecipients' privacy policy. Version 0.1.0-beta.4 follows NU7 and needs zebrad 7.0.0 or later.",
+   "source": "https://github.com/zcash/zallet",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Zafu",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "no",
+    "sapling": "no",
+    "unified": "yes",
+    "unifiedShieldedOnly": "yes"
+   },
+   "holdsShielded": "yes",
+   "note": "Browser-extension wallet (beta, not yet in the Chrome store). It pays t1 addresses and unified addresses that have an Orchard receiver. It refuses Sapling (zs) addresses, and pays TEX only from a transparent account. Ready for NU7 from version 29.4.0.",
+   "source": "https://github.com/rotkonetworks/zafu",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "zecd",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "yes",
+    "unified": "yes",
+    "unifiedShieldedOnly": "yes"
+   },
+   "holdsShielded": "yes",
+   "note": "Wallet program that runs on a server (used by merchants such as Overpay). It sends to unified, Sapling and transparent addresses. Every install needs version 0.9.0 or later for NU7.",
+   "source": "https://zecd.org/rpc/sending.html",
+   "sourceKind": "official",
+   "checked": "2026-11-09"
+  },
+  {
+   "service": "Konclave",
+   "kind": "wallet",
+   "depositAddress": null,
+   "acceptsShieldedDeposit": null,
+   "sendsTo": {
+    "transparent": "yes",
+    "tex": "unknown",
+    "sapling": "no",
+    "unified": "yes",
+    "unifiedShieldedOnly": "yes"
+   },
+   "holdsShielded": "yes",
+   "note": "Multisig vault for Zcash (pre-release). It pays t1 addresses, with a warning, and unified addresses that have an Orchard receiver. It refuses Sapling-only addresses. It sent a mainnet transaction right after NU7 activated.",
+   "source": "https://github.com/deegalabs/konclave",
+   "sourceKind": "official",
    "checked": "2026-11-09"
   }
  ],

@@ -37,3 +37,27 @@ test("the add-or-correct link opens our GitHub issue form, prefilled, with nothi
   assert.equal(addServiceUrl(), "https://github.com/cryppit/wheres-my-zec/issues/new?template=add-or-correct-a-service.yml&title=Add%3A%20");
   assert.equal(addServiceUrl("Gem Wallet"), "https://github.com/cryppit/wheres-my-zec/issues/new?template=add-or-correct-a-service.yml&title=Correct%3A%20Gem%20Wallet");
 });
+
+test("the services checked on 9 Nov from their own pages, APIs or code are listed", () => {
+  const names = new Set(rows.map((r) => r.service));
+  for (const n of ["NEAR Intents (1Click)", "Robinhood", "ChangeNOW", "SwapKit (THORSwap)", "Vizor", "HitBTC", "Atomic Wallet", "Noir Wallet", "LeoDex (Mane)", "Zallet", "Zafu", "zecd", "Konclave"]) {
+    assert.ok(names.has(n), `${n} is missing`);
+  }
+  const byName = Object.fromEntries(rows.map((r) => [r.service, r]));
+  // HitBTC's own API: address_regex ^t[13]… — t1/t3 only.
+  assert.deepEqual(byName.HitBTC.sendsTo, { transparent: "yes", tex: "no", sapling: "no", unified: "no", unifiedShieldedOnly: "no" });
+  // NEAR Intents' docs say transparent only; its bridge code says more. Until the docs agree, TEX and unified stay unknown.
+  assert.equal(byName["NEAR Intents (1Click)"].sendsTo.tex, "unknown");
+  assert.equal(byName["NEAR Intents (1Click)"].sendsTo.unified, "unknown");
+  // Zodl's own code and its 2.0.3 post; Zodl's Keystone screen says Keystone can't pay TEX.
+  assert.equal(byName["Zodl (formerly Zashi)"].sendsTo.sapling, "yes");
+  assert.equal(byName["Zodl (formerly Zashi)"].sendsTo.unifiedShieldedOnly, "yes");
+  assert.equal(byName.Keystone.sendsTo.tex, "no");
+});
+
+test("the hero's service count matches the table", () => {
+  const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  const n = rows.length;
+  assert.match(html, new RegExp(`<b>${n} exchanges &amp; wallets</b>`));
+  assert.match(html, new RegExp(`<span id="cover-count">${n}</span>`));
+});
