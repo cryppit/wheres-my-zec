@@ -1,0 +1,56 @@
+{
+	"actions": [
+		{
+			"date": "1794146708037319646",
+			"height": "28586831",
+			"in": [
+				{
+					"address": "t1f2zP1sPiE39kdomdfawXhssTPu8gK3Pv4",
+					"coins": [
+						{
+							"amount": "152951492",
+							"asset": "ZEC.ZEC"
+						}
+					],
+					"txID": "22AA3A8B56BC7DC2AA6A6A2F1DA72331DB6E4109B2BD7AF224A094E3F451C73A"
+				}
+			],
+			"metadata": {
+				"refund": {
+					"affiliateAddress": "",
+					"affiliateFee": "0",
+					"memo": "=:BSC.USDT:0x00c78c256b12d21f8A7Dc06fE6DFE07C16886e4c:195636347789/1/0",
+					"networkFees": [
+						{
+							"amount": "42418",
+							"asset": "ZEC.ZEC"
+						}
+					],
+					"reason": "emit asset 3346150782 less than price limit 3373040876",
+					"txType": "swap"
+				}
+			},
+			"out": [
+				{
+					"address": "t1f2zP1sPiE39kdomdfawXhssTPu8gK3Pv4",
+					"coins": [
+						{
+							"amount": "152909074",
+							"asset": "ZEC.ZEC"
+						}
+					],
+					"height": "28586835",
+					"txID": "8CFAADA3ECEF21A6CAAB95ACC0268F43DB0672847A2B5CC7D9DB50BF6F0C552C"
+				}
+			],
+			"pools": [],
+			"status": "success",
+			"type": "refund"
+		}
+	],
+	"count": "1",
+	"meta": {
+		"nextPageToken": "285868319000000030",
+		"prevPageToken": "285868319000000030"
+	}
+}

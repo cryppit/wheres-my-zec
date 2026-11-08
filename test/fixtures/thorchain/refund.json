@@ -1,0 +1,202 @@
+{
+	"actions": [
+		{
+			"date": "1794150831064659479",
+			"height": "28587489",
+			"in": [
+				{
+					"address": "t1f2zP1sPiE39kdomdfawXhssTPu8gK3Pv4",
+					"coins": [
+						{
+							"amount": "73806096",
+							"asset": "ZEC.ZEC"
+						}
+					],
+					"txID": "FC77D2E6372498CCDA456BBB12EB7D74024763D7EF447175AE373AACFF614F3C"
+				}
+			],
+			"metadata": {
+				"refund": {
+					"affiliateAddress": "",
+					"affiliateFee": "0",
+					"memo": "=:BSC.USDT:0x00c78c256b12d21f8A7Dc06fE6DFE07C16886e4c:194485093713/1/0",
+					"networkFees": [
+						{
+							"amount": "42404",
+							"asset": "ZEC.ZEC"
+						},
+						{
+							"amount": "25194995",
+							"asset": "BSC.USDT-0X55D398326F99059FF775485246999027B3197955"
+						}
+					],
+					"reason": "swap has been completed",
+					"txType": "swap"
+				}
+			},
+			"out": [
+				{
+					"address": "0x00c78c256b12d21f8A7Dc06fE6DFE07C16886e4c",
+					"coins": [
+						{
+							"amount": "100732129673",
+							"asset": "BSC.USDT-0X55D398326F99059FF775485246999027B3197955"
+						}
+					],
+					"height": "28587493",
+					"txID": "BDFEDE746BA6CAE223D4CC8C2240660A82A1679F964717BDED3616E1B448397C"
+				},
+				{
+					"address": "t1f2zP1sPiE39kdomdfawXhssTPu8gK3Pv4",
+					"coins": [
+						{
+							"amount": "73763692",
+							"asset": "ZEC.ZEC"
+						}
+					],
+					"height": "28587494",
+					"txID": "AE450B809AB54BC44AD1BE159760A08B185ABF636A96237269F6331DCA171C49"
+				}
+			],
+			"pools": [],
+			"status": "success",
+			"type": "refund"
+		},
+		{
+			"date": "1794150474369915001",
+			"height": "28587432",
+			"in": [
+				{
+					"address": "t1f2zP1sPiE39kdomdfawXhssTPu8gK3Pv4",
+					"coins": [
+						{
+							"amount": "79077978",
+							"asset": "ZEC.ZEC"
+						}
+					],
+					"txID": "FC77D2E6372498CCDA456BBB12EB7D74024763D7EF447175AE373AACFF614F3C"
+				}
+			],
+			"metadata": {
+				"swap": {
+					"affiliateAddress": "",
+					"affiliateFee": "0",
+					"inPriceUSD": "1308.469388865003",
+					"isStreamingSwap": true,
+					"liquidityFee": "343774141",
+					"memo": "=:BSC.USDT:0x00c78c256b12d21f8A7Dc06fE6DFE07C16886e4c:194485093713/1/0",
+					"networkFees": [
+						{
+							"amount": "42404",
+							"asset": "ZEC.ZEC"
+						},
+						{
+							"amount": "25194995",
+							"asset": "BSC.USDT-0X55D398326F99059FF775485246999027B3197955"
+						}
+					],
+					"outPriceUSD": "0.872857687585626",
+					"streamingSwapMeta": {
+						"count": "58",
+						"depositedCoin": {
+							"amount": "152884074",
+							"asset": "ZEC.ZEC"
+						},
+						"failedSwapReasons": [
+							"emit asset 3347967633 less than price limit 3351727514",
+							"emit asset 3349130440 less than price limit 3351727514",
+							"emit asset 3349130560 less than price limit 3351727514",
+							"emit asset 3349130560 less than price limit 3351727514",
+							"emit asset 3349130680 less than price limit 3351727514",
+							"emit asset 3343820877 less than price limit 3350416514",
+							"emit asset 3339342187 less than price limit 3350362086",
+							"emit asset 3343618579 less than price limit 3350253744",
+							"emit asset 3338732811 less than price limit 3349701106",
+							"emit asset 3341739858 less than price limit 3349159538"
+						],
+						"failedSwaps": [
+							"3",
+							"4",
+							"5",
+							"6",
+							"7",
+							"8",
+							"9",
+							"10",
+							"11",
+							"15",
+							"17",
+							"24",
+							"25",
+							"27",
+							"28",
+							"29",
+							"30",
+							"31",
+							"32",
+							"33",
+							"34",
+							"35",
+							"36",
+							"44",
+							"46",
+							"48",
+							"52",
+							"55"
+						],
+						"inCoin": {
+							"amount": "79077978",
+							"asset": "ZEC.ZEC"
+						},
+						"interval": "1",
+						"lastHeight": "28587489",
+						"outCoin": {
+							"amount": "100757324668",
+							"asset": "BSC.USDT-0X55D398326F99059FF775485246999027B3197955"
+						},
+						"outEstimation": "195079391298",
+						"quantity": "58"
+					},
+					"swapSlip": "20",
+					"swapTarget": "3353192148",
+					"txType": "swap"
+				}
+			},
+			"out": [
+				{
+					"address": "0x00c78c256b12d21f8A7Dc06fE6DFE07C16886e4c",
+					"coins": [
+						{
+							"amount": "100732129673",
+							"asset": "BSC.USDT-0X55D398326F99059FF775485246999027B3197955"
+						}
+					],
+					"height": "28587493",
+					"txID": "BDFEDE746BA6CAE223D4CC8C2240660A82A1679F964717BDED3616E1B448397C"
+				},
+				{
+					"address": "t1f2zP1sPiE39kdomdfawXhssTPu8gK3Pv4",
+					"coins": [
+						{
+							"amount": "73763692",
+							"asset": "ZEC.ZEC"
+						}
+					],
+					"height": "28587494",
+					"txID": "AE450B809AB54BC44AD1BE159760A08B185ABF636A96237269F6331DCA171C49"
+				}
+			],
+			"pools": [
+				"ZEC.ZEC",
+				"BSC.USDT-0X55D398326F99059FF775485246999027B3197955"
+			],
+			"status": "success",
+			"type": "swap"
+		}
+	],
+	"count": "2",
+	"meta": {
+		"nextPageToken": "285874329000000321",
+		"prevPageToken": "285874899000000652"
+	}
+}

@@ -1,0 +1,100 @@
+{
+	"actions": [
+		{
+			"date": "1794071474683392384",
+			"height": "28574646",
+			"in": [
+				{
+					"address": "0x4fa34cfae93d29585a83f8f6df0e67b656db39c4",
+					"coins": [
+						{
+							"amount": "33472",
+							"asset": "ZEC.ZEC"
+						}
+					],
+					"txID": "2FCD6BA43026158CCAF8750B4400D2D83A008D9BA505E1777A13D2E5DAC4D32C"
+				}
+			],
+			"metadata": {
+				"refund": {
+					"affiliateAddress": "",
+					"affiliateFee": "0",
+					"memo": "=:z:t1XuvZKdu8uFBdr5kJPAFHU3uHEGdZMJhoW:0/0/14400",
+					"networkFees": [],
+					"reason": "not enough asset to pay for fees; fail to refund (33472 ZEC.ZEC): swap output",
+					"txType": "swap"
+				}
+			},
+			"out": [],
+			"pools": [],
+			"status": "pending",
+			"type": "refund"
+		},
+		{
+			"date": "1794071474683392384",
+			"height": "28574646",
+			"in": [
+				{
+					"address": "0x4fa34cfae93d29585a83f8f6df0e67b656db39c4",
+					"coins": [
+						{
+							"amount": "33472",
+							"asset": "ZEC.ZEC"
+						}
+					],
+					"txID": "2FCD6BA43026158CCAF8750B4400D2D83A008D9BA505E1777A13D2E5DAC4D32C"
+				}
+			],
+			"metadata": {},
+			"out": [],
+			"pools": [
+				"ZEC.ZEC"
+			],
+			"status": "success",
+			"type": "donate"
+		},
+		{
+			"date": "1794071474683392384",
+			"height": "28574646",
+			"in": [
+				{
+					"address": "0x4fa34cfae93d29585a83f8f6df0e67b656db39c4",
+					"coins": [
+						{
+							"amount": "19000",
+							"asset": "ETH.ETH"
+						}
+					],
+					"txID": "2FCD6BA43026158CCAF8750B4400D2D83A008D9BA505E1777A13D2E5DAC4D32C"
+				}
+			],
+			"metadata": {
+				"swap": {
+					"affiliateAddress": "",
+					"affiliateFee": "0",
+					"inPriceUSD": "2262.115995876883",
+					"isStreamingSwap": false,
+					"liquidityFee": "141102",
+					"memo": "=:z:t1XuvZKdu8uFBdr5kJPAFHU3uHEGdZMJhoW:0/0/14400",
+					"networkFees": [],
+					"outPriceUSD": "1285.6900385911879",
+					"swapSlip": "20",
+					"swapTarget": "0",
+					"txType": "swap"
+				}
+			},
+			"out": [],
+			"pools": [
+				"ETH.ETH",
+				"ZEC.ZEC"
+			],
+			"status": "pending",
+			"type": "swap"
+		}
+	],
+	"count": "3",
+	"meta": {
+		"nextPageToken": "285746469000000009",
+		"prevPageToken": "285746469000000012"
+	}
+}
