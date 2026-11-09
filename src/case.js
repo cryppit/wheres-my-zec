@@ -113,7 +113,7 @@ function refundLine(refund, now) {
   const until = dayAfter(now, refund.secondsLeft);
   return [
     `If the bridge never credited this deposit: about ${days} days left to request a refund yourself${until ? ` (until about ${until} UTC)` : ""}, while NEAR's Zcash light client still holds its block. ${credit}`,
-    `Since NU7, Zcash blocks are 25 seconds apart, so this window is about 30 days, not 90. ${below}`,
+    `At the 25-second blocks Zcash has had since NU7, this window is about 30 days. ${below}`,
   ];
 }
 

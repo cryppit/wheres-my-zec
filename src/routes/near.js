@@ -2,7 +2,7 @@
 // request_refund proves the deposit's block against it, and it keeps only its newest blocks. This reads it straight from
 // NEAR with three view calls that carry nothing about the person (no address, no txid), and turns a deposit's block
 // height into blocks and seconds left. Since NU7 (6 Nov 2026) Zcash blocks are 25 s apart, so its 103,680 blocks last
-// about 30 days, not 90.
+// about 30 days.
 import { withTimeout } from "../net.js";
 
 const NEAR_RPC = "https://rpc.mainnet.fastnear.com";

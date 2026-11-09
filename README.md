@@ -13,8 +13,8 @@ Built for NEAR HACKATHON, 1–14 Nov 2026. Every commit in this repository is fr
 
 **What it does on NEAR.** ZEC that someone sent into the NEAR Omni bridge can get stuck. The bridge lets the depositor
 request a refund themselves, but only while its Zcash light client on NEAR (`zcash-client.bridge.near`) still holds the
-deposit's block. Since Zcash's NU7 upgrade (6 Nov 2026) blocks are 25 seconds apart, so the client's 103,680 blocks last
-about 30 days, not 90, and older deposits lose that option silently. Where's My ZEC finds a deposit through the bridge's
+deposit's block. The client keeps 103,680 blocks, which is about 30 days at the 25-second blocks Zcash has had since
+NU7 (6 Nov 2026). Where's My ZEC finds a deposit through the bridge's
 records, then reads the light client directly from NEAR (`get_mainchain_size`, `get_last_block_header`, `get_config`,
 public view calls that carry nothing about the person) and tells them, if the bridge never credited the deposit, how
 many days are left, or that the window has closed and who can still help. Swaps through NEAR Intents are handed to
