@@ -4,6 +4,7 @@ import { framed } from "./frame-guard.js";
 import { logoFor, routeLogo } from "./logos.js";
 import { shorten } from "./journey.js";
 import { addServiceUrl, coverage } from "./coverage.js";
+import { PIN_FILES, dataRoot, fetchLastPin, pinStatus, pinLine } from "./pin.js";
 
 const SITE = "https://cryppit.github.io/wheres-my-zec/";
 const INTENT_SENTINEL = "https://cryppit.github.io/intent-sentinel/";
@@ -237,6 +238,23 @@ async function buildCoverage() {
   }
 }
 
+/** The tables' NEAR pin: fingerprint the data files exactly as this page loads them, compare with the last pin. */
+async function checkPin() {
+  const line = $("pin-line");
+  if (!line) return;
+  try {
+    const files = await Promise.all(PIN_FILES.map(async (path) => {
+      const res = await fetch(path, { cache: "no-store" });
+      if (!res.ok) throw new Error(path);
+      return { path, bytes: new Uint8Array(await res.arrayBuffer()) };
+    }));
+    const { root } = await dataRoot(files);
+    line.textContent = pinLine(pinStatus(await fetchLastPin(fetch), root));
+  } catch {
+    line.textContent = pinLine({ state: "busy" });
+  }
+}
+
 function start() {
   if (framed(window)) {
     document.body.replaceChildren(el("p", { class: "notice" }, "This page was opened inside another site. Open it directly: ", el("a", { href: SITE, target: "_top" }, SITE)));
@@ -253,6 +271,7 @@ function start() {
     });
   }
   buildCoverage();
+  checkPin();
   const m = /^#q=([0-9a-f]{64})$/i.exec(location.hash);
   if (m) {
     $("q").value = m[1];

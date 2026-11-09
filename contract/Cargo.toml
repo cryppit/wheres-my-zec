@@ -1,0 +1,31 @@
+[package]
+name = "wmz-pin"
+version = "2.0.0"
+edition = "2021"
+description = "Cryppit Pin v2: pins a daily Merkle root of Where's My ZEC's published data tables on NEAR (append-only, no owner, no funds)"
+license = "MIT"
+repository = "https://github.com/cryppit/wheres-my-zec"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+near-sdk = "=5.30.1"
+
+[dev-dependencies]
+near-sdk = { version = "=5.30.1", features = ["unit-testing"] }
+
+[profile.release]
+codegen-units = 1
+opt-level = "z"
+lto = true
+debug = false
+panic = "abort"
+overflow-checks = true
+
+[package.metadata.near.reproducible_build]
+image = "sourcescan/cargo-near:0.22.0-rust-1.97.1"
+image_digest = "sha256:7467038bdddc86484b73b416eeadce926ff59013e128e53dec5a19e1cb4b2234"
+passed_env = []
+container_build_command = ["cargo", "near", "build", "non-reproducible-wasm", "--locked"]

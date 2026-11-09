@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <!-- The page may talk only to itself and the public sources the code reads. test/privacy.test.js keeps this list exact. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self' https://api.blockchair.com https://gateway.liquify.com https://midgard.ninerealms.com https://mainnet.api.bridge.nearone.org https://rpc.mainnet.fastnear.com; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self' https://api.blockchair.com https://gateway.liquify.com https://midgard.ninerealms.com https://mainnet.api.bridge.nearone.org https://rpc.mainnet.fastnear.com https://rpc.testnet.fastnear.com; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Where's My ZEC</title>
@@ -98,6 +98,7 @@
         <h2 id="coverage-h"><span id="cover-count">39</span> exchanges &amp; wallets. <em>One check.</em></h2>
         <p class="say">Paste an address and see which of them can pay it, and which can't. Every answer below comes from the service's own docs, its code or a public registry, with the date we checked.</p>
         <p class="cta"><a class="go" id="add-service" href="https://github.com/cryppit/wheres-my-zec/issues/new?template=add-or-correct-a-service.yml&amp;title=Add%3A%20" target="_blank" rel="noopener noreferrer">Add or correct your wallet →</a></p>
+        <p class="say small" id="pin-line" aria-live="polite">Checking these tables' fingerprint on NEAR…</p>
         <p class="hint">Run a wallet or an exchange? Send us your public evidence and we'll add or fix your row. No paid placement.</p>
       </div>
       <div class="wheel" id="wheel" role="img" aria-label="Exchanges and wallets covered"></div>
@@ -127,6 +128,7 @@
       <li>An address: nothing. It's answered on this page. Your seed: never asked for, and refused if pasted.</li>
       <li>A transaction: only the transaction ID, to <code>api.blockchair.com</code>, and to THORChain's records (<code>gateway.liquify.com</code>, or <code>midgard.ninerealms.com</code>) if it's a THORChain swap.</li>
       <li>Only if you press "Check bridges and swaps": its public output addresses, to <code>mainnet.api.bridge.nearone.org</code>. If one is an Omni deposit, the page also reads NEAR's Zcash light client from <code>rpc.mainnet.fastnear.com</code>, sending nothing about you or the transaction, to work out the refund deadline.</li>
+      <li>To check these tables haven't been quietly rewritten, the page reads their latest fingerprint pin from the <code>wmz-pin.cryppit.testnet</code> contract on NEAR via <code>rpc.testnet.fastnear.com</code>, sending nothing about you.</li>
       <li>Those services see your IP address, like any website. Nothing is stored: no accounts, cookies or analytics.</li>
     </ul>
   </section>

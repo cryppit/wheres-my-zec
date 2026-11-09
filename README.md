@@ -16,8 +16,17 @@ request a refund themselves, but only while its Zcash light client on NEAR (`zca
 deposit's block. Since Zcash's NU7 upgrade (6 Nov 2026) blocks are 25 seconds apart, so the client's 103,680 blocks last
 about 30 days, not 90, and older deposits lose that option silently. Where's My ZEC finds a deposit through the bridge's
 records, then reads the light client directly from NEAR (`get_mainchain_size`, `get_last_block_header`, `get_config`,
-public view calls that carry nothing about the person) and tells them how many days are left, or that the window has
-closed and who can still help. Swaps through NEAR Intents are handed to Intent Sentinel.
+public view calls that carry nothing about the person) and tells them, if the bridge never credited the deposit, how
+many days are left, or that the window has closed and who can still help. Swaps through NEAR Intents are handed to
+Intent Sentinel.
+
+**A contract on NEAR: the tables are pinned.** `contract/` is Cryppit Pin v2 (near-sdk 5.30.1, MIT): once a UTC day is
+over, one fingerprint of the published tables (`data/acceptance.json`, `data/restore.json`) is pinned on
+`wmz-pin.cryppit.testnet`. Append-only, one pin per closed day, each pin names the one before it, no owner, no funds, and
+the account is locked after deploy. The page reads the last pin and says whether the tables it loaded still match it,
+so nobody, including us, can quietly rewrite what the tables told people on a given day. Try it: open the page and see
+the line under "39 exchanges & wallets"; or run `node tools/pin.mjs verify <day>`, which recomputes that day's root
+from git and compares it with the contract. Details: [`contract/README.md`](contract/README.md).
 
 **Tracks:** Privacy & Private AI (keyless, refuses seeds and keys, shielded-aware); Open Innovation.
 
@@ -29,7 +38,9 @@ links to it for NEAR Intents swaps; the code bases are separate.
 the address, transaction and landing modules from Shield Receipt (`src/zcash-address.js`, `src/address.js`,
 `src/fetch.js`, `src/tx.js`, `src/judge.js`, `src/copy.js` and their tests), and the Omni refund rules behind the
 Zcash Refund Helper, which this page links to. New in the window: the input reader, the THORChain, Omni and NEAR
-light-client routes, the case file, the page, the dated tables and the "my wallet shows zero" flow.
+light-client routes, the case file, the page, the dated tables, the "my wallet shows zero" flow and the Pin v2 contract.
+The contract's rules follow Cryppit's earlier pin contract (Intent Sentinel's MIT anchor, written without near-sdk);
+v2 is new code written with near-sdk in the window, and the two projects deploy separate contracts.
 
 ## What it answers
 
@@ -67,6 +78,7 @@ Every answer ends with who acts next (you, a service, or nobody) and a ready mes
 - Only when you press "Check bridges and swaps", the transaction's public transparent output addresses go to the Omni
   bridge's records (`mainnet.api.bridge.nearone.org`). If one is an Omni deposit, the page also reads NEAR's Zcash light
   client from `rpc.mainnet.fastnear.com`, with view calls that send nothing about you or the transaction.
+- To check the tables' pin, one view call (`last_pin`) goes to `rpc.testnet.fastnear.com`, carrying nothing about you.
 - Those services see your IP address. No cookies, no analytics, no storage. `test/privacy.test.js` keeps the page's
   Content-Security-Policy, the code and this list in step.
 
