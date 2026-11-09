@@ -103,11 +103,18 @@ function dayAfter(now, seconds) {
 /** What NEAR's Zcash light client says about refunding this deposit yourself. */
 function refundLine(refund, now) {
   if (!refund) return [];
-  if (refund.busy) return ["Couldn't read the refund deadline from NEAR right now; the Refund Helper shows it too."];
-  if (!refund.open) return ["NEAR's Zcash light client no longer holds this deposit's block, so a refund request you send yourself would fail."];
+  // This page can't see whether the bridge credited the deposit (the Refund Helper can), so the deadline is only
+  // ever stated for a deposit it never credited.
+  const credit = "Most deposits are credited within hours; this page can't see whether this one was, the Refund Helper can.";
+  const below = "A deposit below the bridge's minimum is kept by the bridge with no refund.";
+  if (refund.busy) return [`${credit} Couldn't read the refund deadline from NEAR right now; the Refund Helper shows it too.`, below];
+  if (!refund.open) return [`If the bridge never credited this deposit: NEAR's Zcash light client no longer holds this deposit's block, so a refund request you send yourself would fail. ${credit}`, below];
   const days = Math.floor(refund.secondsLeft / 86_400);
   const until = dayAfter(now, refund.secondsLeft);
-  return [`NEAR's Zcash light client still holds this deposit's block: about ${days} days left to request a refund yourself${until ? ` (until about ${until} UTC)` : ""}. Since NU7, Zcash blocks are 25 seconds apart, so this window is about 30 days, not 90.`];
+  return [
+    `If the bridge never credited this deposit: about ${days} days left to request a refund yourself${until ? ` (until about ${until} UTC)` : ""}, while NEAR's Zcash light client still holds its block. ${credit}`,
+    `Since NU7, Zcash blocks are 25 seconds apart, so this window is about 30 days, not 90. ${below}`,
+  ];
 }
 
 function omniCase(o, now) {

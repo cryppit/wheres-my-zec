@@ -225,3 +225,20 @@ test("if NEAR couldn't be read, the deposit is still shown, with the deadline as
   const c = caseForTx({ txid: TXID, tx: synthetic({}), omni: omniDeposit({ busy: true }), now: NOW });
   assert.match(c.lines.join(" "), /couldn't read the refund deadline/i);
 });
+
+// Where's My ZEC can't see whether the bridge credited a deposit (the Refund Helper does), and nearly every deposit is
+// credited. So the deadline is only ever stated for a deposit the bridge never credited, never as a plain countdown,
+// and a deposit below the bridge's minimum is named as kept with no refund (found 9 Nov 2026: 54 such deposits).
+test("the refund deadline is conditional on the bridge never having credited the deposit", () => {
+  const c = caseForTx({ txid: TXID, tx: synthetic({}), omni: omniDeposit({ open: true, blocksLeft: 93_978, secondsLeft: 93_978 * 25 }), now: NOW });
+  const first = c.lines[0];
+  assert.match(first, /never credited/i);
+  assert.match(first, /most deposits are credited/i);
+  assert.match(c.lines.join(" "), /below the bridge's minimum/i);
+  assert.doesNotMatch(first, /^NEAR's Zcash light client still holds/);
+});
+
+test("a closed window is also conditional on the bridge never having credited it", () => {
+  const c = caseForTx({ txid: TXID, tx: synthetic({}), omni: omniDeposit({ open: false, blocksLeft: 0, secondsLeft: 0 }), now: NOW });
+  assert.match(c.lines[0], /never credited/i);
+});
