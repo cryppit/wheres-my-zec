@@ -62,7 +62,8 @@ Every answer ends with who acts next (you, a service, or nobody) and a ready mes
 - An address is answered in the page. Nothing is sent.
 - For a transaction, only its ID goes to `api.blockchair.com`.
 - If it carries a THORChain instruction, only its ID also goes to THORChain's public records (`gateway.liquify.com`,
-  or `midgard.ninerealms.com` as a fallback).
+  or `midgard.ninerealms.com` as a fallback). When those records say "pending", the same ID goes to THORNode on
+  `gateway.liquify.com` to check: Midgard can keep a swap or refund as pending after THORChain has sent it.
 - Only when you press "Check bridges and swaps", the transaction's public transparent output addresses go to the Omni
   bridge's records (`mainnet.api.bridge.nearone.org`). If one is an Omni deposit, the page also reads NEAR's Zcash light
   client from `rpc.mainnet.fastnear.com`, with view calls that send nothing about you or the transaction.

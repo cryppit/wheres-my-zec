@@ -1,0 +1,76 @@
+{
+ "tx": {
+  "id": "22AA3A8B56BC7DC2AA6A6A2F1DA72331DB6E4109B2BD7AF224A094E3F451C73A",
+  "chain": "ZEC",
+  "from_address": "t1f2zP1sPiE39kdomdfawXhssTPu8gK3Pv4",
+  "to_address": "t1atvXL7Uis9uWTLcKFcaVdz3VgmQxG2ATD",
+  "coins": [
+   {
+    "asset": "ZEC.ZEC",
+    "amount": "152951492"
+   }
+  ],
+  "gas": [
+   {
+    "asset": "ZEC.ZEC",
+    "amount": "25000"
+   }
+  ],
+  "memo": "=:BSC.USDT:0x00c78c256b12d21f8A7Dc06fE6DFE07C16886e4c:195636347789/1/0"
+ },
+ "planned_out_txs": [
+  {
+   "chain": "ZEC",
+   "to_address": "t1f2zP1sPiE39kdomdfawXhssTPu8gK3Pv4",
+   "coin": {
+    "asset": "ZEC.ZEC",
+    "amount": "152909074"
+   },
+   "refund": true
+  }
+ ],
+ "out_txs": [
+  {
+   "id": "8CFAADA3ECEF21A6CAAB95ACC0268F43DB0672847A2B5CC7D9DB50BF6F0C552C",
+   "chain": "ZEC",
+   "from_address": "t1atvXL7Uis9uWTLcKFcaVdz3VgmQxG2ATD",
+   "to_address": "t1f2zP1sPiE39kdomdfawXhssTPu8gK3Pv4",
+   "coins": [
+    {
+     "asset": "ZEC.ZEC",
+     "amount": "152909074"
+    }
+   ],
+   "gas": [
+    {
+     "asset": "ZEC.ZEC",
+     "amount": "25000"
+    }
+   ],
+   "memo": "REFUND:22AA3A8B56BC7DC2AA6A6A2F1DA72331DB6E4109B2BD7AF224A094E3F451C73A"
+  }
+ ],
+ "stages": {
+  "inbound_observed": {
+   "pre_confirmation_count": 109,
+   "final_count": 109,
+   "completed": true
+  },
+  "inbound_confirmation_counted": {
+   "remaining_confirmation_seconds": 0,
+   "completed": true
+  },
+  "inbound_finalised": {
+   "completed": true
+  },
+  "swap_status": {
+   "pending": false
+  },
+  "swap_finalised": {
+   "completed": true
+  },
+  "outbound_signed": {
+   "completed": true
+  }
+ }
+}

@@ -1,0 +1,103 @@
+{
+ "tx": {
+  "id": "2746A4C744A2AC34E7B9D72EADC174B4E1A8EE44AAD3F46FE8947D86E202A360",
+  "chain": "ZEC",
+  "from_address": "t1KdYwS1PP8GYkPdRWYfY1A9BVnhjqqGGE9",
+  "to_address": "t1atvXL7Uis9uWTLcKFcaVdz3VgmQxG2ATD",
+  "coins": [
+   {
+    "asset": "ZEC.ZEC",
+    "amount": "6500000"
+   }
+  ],
+  "gas": [
+   {
+    "asset": "ZEC.ZEC",
+    "amount": "25000"
+   }
+  ],
+  "memo": "=:BSC.USDT:0xd0e5999e156957f37E2A676D78248900beF708Ae:0/1/0:g1:50"
+ },
+ "planned_out_txs": [
+  {
+   "chain": "BSC",
+   "to_address": "0xd0e5999e156957f37E2A676D78248900beF708Ae",
+   "coin": {
+    "asset": "BSC.USDT-0X55D398326F99059FF775485246999027B3197955",
+    "amount": "8147348419"
+   },
+   "refund": false
+  },
+  {
+   "chain": "THOR",
+   "to_address": "thor1dl7un46w7l7f3ewrnrm6nq58nerjtp0dradjtd",
+   "coin": {
+    "asset": "THOR.RUNE",
+    "amount": "69905536"
+   },
+   "refund": false
+  }
+ ],
+ "out_txs": [
+  {
+   "id": "0000000000000000000000000000000000000000000000000000000000000000",
+   "chain": "THOR",
+   "from_address": "thor1g98cy3n9mmjrpn0sxmn63lztelera37n8n67c0",
+   "to_address": "thor1dl7un46w7l7f3ewrnrm6nq58nerjtp0dradjtd",
+   "coins": [
+    {
+     "asset": "THOR.RUNE",
+     "amount": "69905536"
+    }
+   ],
+   "gas": [
+    {
+     "asset": "THOR.RUNE",
+     "amount": "2000000"
+    }
+   ],
+   "memo": "OUT:2746A4C744A2AC34E7B9D72EADC174B4E1A8EE44AAD3F46FE8947D86E202A360"
+  },
+  {
+   "id": "731BC074C0C5CC6BE2FBBC4430A9ED1DBC557E5837F225B540EC09B69608B482",
+   "chain": "BSC",
+   "from_address": "0x46f3fb8c14006268d153b18000495c8ee858e94b",
+   "to_address": "0xd0e5999e156957f37E2A676D78248900beF708Ae",
+   "coins": [
+    {
+     "asset": "BSC.USDT-0X55D398326F99059FF775485246999027B3197955",
+     "amount": "8147348419"
+    }
+   ],
+   "gas": [
+    {
+     "asset": "BSC.BNB",
+     "amount": "6947"
+    }
+   ],
+   "memo": "OUT:2746A4C744A2AC34E7B9D72EADC174B4E1A8EE44AAD3F46FE8947D86E202A360"
+  }
+ ],
+ "stages": {
+  "inbound_observed": {
+   "final_count": 109,
+   "completed": true
+  },
+  "inbound_confirmation_counted": {
+   "remaining_confirmation_seconds": 0,
+   "completed": true
+  },
+  "inbound_finalised": {
+   "completed": true
+  },
+  "swap_status": {
+   "pending": false
+  },
+  "swap_finalised": {
+   "completed": true
+  },
+  "outbound_signed": {
+   "completed": true
+  }
+ }
+}

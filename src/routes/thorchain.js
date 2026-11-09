@@ -6,6 +6,9 @@
 import { request } from "../net.js";
 
 const MIDGARD = ["https://gateway.liquify.com/chain/thorchain_midgard", "https://midgard.ninerealms.com"];
+// THORNode (THORChain's own node API), asked only to confirm a "pending" answer. Same gateway host as Midgard, so the
+// page's connect-src already allows it.
+const THORNODE = ["https://gateway.liquify.com/chain/thorchain_api"];
 // Memo prefixes from THORChain's memo docs (dev.thorchain.org/concepts/memos.html), long and short forms.
 const MEMO = /^(=<|m=<|=|swap|s|\+|add|a|-|withdraw|wd|trade\+|trade-|secure\+|secure-|loan\+|loan-|\$\+|\$-|donate|d|pool\+|pool-|tcy\+|tcy-|tcy|switch|reference|r|name|n|~|noop|bond|unbond|rebond|leave):/i;
 const ZEC = "ZEC.ZEC";
@@ -91,8 +94,50 @@ export function thorchainOutcome(data, txid) {
   return { ...base, state: "other", nextParty: "nobody", type: actions[0].type };
 }
 
+const ZERO_ID = /^0+$/;
+const sentOut = (o) => ({
+  address: o.to_address,
+  asset: o.coins?.[0]?.asset,
+  amount: o.coins?.[0]?.amount,
+  // A Zcash txid is shown lower-case; a THORChain-native payout has no transaction of its own (all zeros).
+  txid: !o.id || ZERO_ID.test(o.id) ? null : o.chain === "ZEC" ? o.id.toLowerCase() : o.id,
+});
+
+/** Midgard can keep saying "pending" after THORChain has sent the coins. THORNode's tx/status is THORChain's live
+ * state: when it shows the outbound signed and sent, a pending answer becomes refunded or done. Anything else, or no
+ * THORNode answer, leaves the outcome as it was. */
+export function confirmWithThornode(outcome, status) {
+  if (!outcome || !["pending", "refund-pending"].includes(outcome.state)) return outcome;
+  const outs = (status?.out_txs ?? []).filter((o) => o.coins?.[0]?.asset);
+  if (status?.stages?.outbound_signed?.completed !== true || outs.length === 0) return outcome;
+  const zec = outs.find((o) => o.coins[0].asset === ZEC);
+  const others = outs.filter((o) => o.coins[0].asset !== ZEC);
+  // The user's payout is the last non-ZEC output; earlier THOR.RUNE outputs are affiliate and fee payouts.
+  const payout = others.length ? sentOut(others[others.length - 1]) : null;
+  const refund = zec ? { address: zec.to_address, amountZat: Number(zec.coins[0].amount), txid: sentOut(zec).txid } : null;
+  const base = { ...outcome, nextParty: "nobody", confirmedBy: "thornode" };
+  if (outcome.state === "refund-pending") {
+    return { ...base, state: payout ? "partial" : "refunded", refund, ...(payout ? { payout } : {}) };
+  }
+  if (refund) return { ...base, state: "partial", reason: plainReason("swap has been completed"), payout, refund };
+  return { ...base, state: "done", payout };
+}
+
+/** THORNode's live status for one txid (only the txid is sent); null when it can't be read. */
+async function fetchThornodeStatus(txid, fetchImpl, timeoutMs) {
+  for (const host of THORNODE) {
+    try {
+      const res = await request(fetchImpl, `${host}/thorchain/tx/status/${txid.toUpperCase()}`, timeoutMs);
+      if (res.ok) return await res.json();
+    } catch {
+      // try the next host
+    }
+  }
+  return null;
+}
+
 /** Ask Midgard about one txid (only the txid is sent). An empty answer is checked with the next host, which may be
- * further along; every host failing is "busy", never "not seen". */
+ * further along; every host failing is "busy", never "not seen". A pending answer is checked with THORNode. */
 export async function fetchThorchain(txid, fetchImpl = fetch, { timeoutMs } = {}) {
   let notSeen = null;
   for (const host of MIDGARD) {
@@ -100,6 +145,9 @@ export async function fetchThorchain(txid, fetchImpl = fetch, { timeoutMs } = {}
       const res = await request(fetchImpl, `${host}/v2/actions?txid=${txid.toUpperCase()}`, timeoutMs);
       if (!res.ok) continue;
       const outcome = thorchainOutcome(await res.json(), txid);
+      if (outcome.state === "pending" || outcome.state === "refund-pending") {
+        return confirmWithThornode(outcome, await fetchThornodeStatus(txid, fetchImpl, timeoutMs));
+      }
       if (outcome.state !== "not-seen") return outcome;
       notSeen = outcome;
     } catch {

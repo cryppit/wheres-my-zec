@@ -1,0 +1,41 @@
+{
+ "tx": {
+  "id": "2FCD6BA43026158CCAF8750B4400D2D83A008D9BA505E1777A13D2E5DAC4D32C",
+  "chain": "ETH",
+  "from_address": "0x4fa34cfae93d29585a83f8f6df0e67b656db39c4",
+  "to_address": "0x51649Cf810ea9F1F61165044b7149070C67f79c8",
+  "coins": [
+   {
+    "asset": "ETH.ETH",
+    "amount": "19000"
+   }
+  ],
+  "gas": [
+   {
+    "asset": "ETH.ETH",
+    "amount": "169"
+   }
+  ],
+  "memo": "=:z:t1XuvZKdu8uFBdr5kJPAFHU3uHEGdZMJhoW:0/0/14400"
+ },
+ "stages": {
+  "inbound_observed": {
+   "pre_confirmation_count": 110,
+   "final_count": 110,
+   "completed": true
+  },
+  "inbound_confirmation_counted": {
+   "remaining_confirmation_seconds": 0,
+   "completed": true
+  },
+  "inbound_finalised": {
+   "completed": true
+  },
+  "swap_status": {
+   "pending": false
+  },
+  "swap_finalised": {
+   "completed": true
+  }
+ }
+}

@@ -3,7 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { thorchainMemo, thorchainOutcome, fetchThorchain } from "../src/routes/thorchain.js";
+import { thorchainMemo, thorchainOutcome, fetchThorchain, confirmWithThornode } from "../src/routes/thorchain.js";
 
 const load = (name) => JSON.parse(readFileSync(new URL(`./fixtures/thorchain/${name}.json`, import.meta.url), "utf8"));
 const hex = (s) => Buffer.from(s, "utf8").toString("hex");
@@ -151,4 +151,77 @@ test("an empty answer from the first host is checked against the second", async 
   const o = await fetchThorchain(SWAP, fetchImpl);
   assert.equal(asked.length, 2);
   assert.equal(o.state, "done");
+});
+
+// Midgard can keep saying "pending" after THORChain has paid (seen 9 Nov 2026: a refund Midgard listed as pending
+// had been signed and sent per THORNode). So a "pending" answer is checked against THORNode's tx/status before we
+// show it. Fixtures status-*.json are real THORNode answers recorded on 9 Nov 2026 (gateway.liquify.com).
+const pendingRefund = () => {
+  const data = load("refund-full");
+  for (const a of data.actions) if (a.type === "refund") { a.status = "pending"; for (const o of a.out ?? []) o.txID = ""; }
+  return data;
+};
+const pendingSwap = () => {
+  const data = load("swap-success");
+  data.actions[0].status = "pending";
+  for (const o of data.actions[0].out ?? []) o.txID = "";
+  return data;
+};
+
+test("a refund Midgard calls pending but THORNode shows as sent is refunded, with THORNode's ZEC transaction", () => {
+  const o = confirmWithThornode(thorchainOutcome(pendingRefund(), FULL_REFUND), load("status-refund-full"));
+  assert.equal(o.state, "refunded");
+  assert.equal(o.nextParty, "nobody");
+  assert.equal(o.confirmedBy, "thornode");
+  assert.equal(o.refund.address, "t1f2zP1sPiE39kdomdfawXhssTPu8gK3Pv4");
+  assert.equal(o.refund.amountZat, 152_909_074);
+  assert.match(o.refund.txid, /^8cfaada3ec[0-9a-f]{54}$/);
+  assert.match(o.reason, /price/i);
+});
+
+test("a swap Midgard calls pending but THORNode shows as sent is done, with the payout and not the RUNE fee", () => {
+  const o = confirmWithThornode(thorchainOutcome(pendingSwap(), SWAP), load("status-swap"));
+  assert.equal(o.state, "done");
+  assert.equal(o.confirmedBy, "thornode");
+  assert.equal(o.payout.address, "0xd0e5999e156957f37E2A676D78248900beF708Ae");
+  assert.ok(o.payout.asset.startsWith("BSC.USDT"));
+  assert.equal(o.payout.amount, "8147348419");
+  assert.match(o.payout.txid, /^731BC074C0/i);
+});
+
+test("THORNode still waiting to sign keeps it pending", () => {
+  const status = load("status-refund-full");
+  status.stages.outbound_signed.completed = false;
+  status.out_txs = [];
+  const o = confirmWithThornode(thorchainOutcome(pendingRefund(), FULL_REFUND), status);
+  assert.equal(o.state, "refund-pending");
+  assert.equal(o.nextParty, "thorchain");
+});
+
+test("an answer that isn't pending is never changed by THORNode", () => {
+  const done = thorchainOutcome(load("swap-success"), SWAP);
+  assert.deepEqual(confirmWithThornode(done, load("status-dust")), done);
+  assert.deepEqual(confirmWithThornode(done, null), done);
+});
+
+test("fetchThorchain checks a pending answer with THORNode, sending only the txid", async () => {
+  const asked = [];
+  const fetchImpl = async (url) => {
+    asked.push(url);
+    if (url.includes("/thorchain/tx/status/")) return new Response(JSON.stringify(load("status-refund-full")), { status: 200 });
+    return new Response(JSON.stringify(pendingRefund()), { status: 200 });
+  };
+  const o = await fetchThorchain(FULL_REFUND, fetchImpl);
+  assert.equal(o.state, "refunded");
+  assert.equal(asked.length, 2);
+  assert.match(asked[1], /\/thorchain\/tx\/status\/22AA3A8B56BC7DC2AA6A6A2F1DA72331DB6E4109B2BD7AF224A094E3F451C73A$/);
+});
+
+test("if THORNode can't be reached, Midgard's pending answer stands", async () => {
+  const fetchImpl = async (url) => {
+    if (url.includes("/thorchain/tx/status/")) throw new Error("offline");
+    return new Response(JSON.stringify(pendingRefund()), { status: 200 });
+  };
+  const o = await fetchThorchain(FULL_REFUND, fetchImpl);
+  assert.equal(o.state, "refund-pending");
 });
